@@ -20,7 +20,8 @@ PhysicsComponent::PhysicsComponent(Component* parent_, float mass_)
 	else {
 		std::cout << "parent is not an Actor or is null" << std::endl;
 	}
-}//here goes Umer's stuff
+}
+//here goes Umer Noor's stuff
 void PhysicsComponent::Update(float deltaTime) {
 	tc->Translate(vel * deltaTime + 0.5f * acc * deltaTime * deltaTime);
 	vel += acc * deltaTime;

@@ -1,1 +1,83 @@
-my xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Assets>
+
+    <Components>
+
+        <!-- Shaders -->
+        <Component name="basicShader" type="ShaderComponent"
+            vert="shaders/basic.vert"
+            frag="shaders/basic.frag"/>
+
+        <!-- Meshes -->
+        <Component name="tileMesh" type="MeshComponent"
+            mesh="meshes/Cube.obj"/>
+
+        <!-- Materials -->
+        <Component name="blackMaterial" type="MaterialComponent"
+            texture="textures/black.png"/>
+        <Component name="whiteMaterial" type="MaterialComponent"
+            texture="textures/white.png"/>
+
+        <!-- Collision -->
+        <Component name="tileCollision" type="CollisionComponent"
+            shape="aabb"
+            cx="0" cy="0" cz="0"
+            hx="0.5" hy="0.05" hz="0.5"/>
+
+        <!-- Transforms for each tile position on the board -->
+        <Component name="transform_0_0" type="TransformComponent"
+            px="0" py="0" pz="0"
+            ow="1" ox="0" oy="0" oz="0"
+            sx="1" sy="1" sz="1"/>
+        <Component name="transform_1_0" type="TransformComponent"
+            px="1" py="0" pz="0"
+            ow="1" ox="0" oy="0" oz="0"
+            sx="1" sy="1" sz="1"/>
+        <Component name="transform_0_1" type="TransformComponent"
+            px="0" py="0" pz="1"
+            ow="1" ox="0" oy="0" oz="0"
+            sx="1" sy="1" sz="1"/>
+        <Component name="transform_1_1" type="TransformComponent"
+            px="1" py="0" pz="1"
+            ow="1" ox="0" oy="0" oz="0"
+            sx="1" sy="1" sz="1"/>
+
+    </Components>
+
+    <Actors>
+
+        <!-- Camera -->
+        <Actor name="mainCamera" type="CameraActor"
+            fovy="45.0" aspect="1.778" near="0.1" far="100.0"/>
+
+        <!-- Black tiles (even positions) -->
+        <Actor name="blackTile_0_0" type="Actor"
+            mesh="tileMesh"
+            material="blackMaterial"
+            shader="basicShader"
+            collision="tileCollision"
+            transform="transform_0_0"/>
+        <Actor name="blackTile_1_1" type="Actor"
+            mesh="tileMesh"
+            material="blackMaterial"
+            shader="basicShader"
+            collision="tileCollision"
+            transform="transform_1_1"/>
+
+        <!-- White tiles (odd positions) -->
+        <Actor name="whiteTile_1_0" type="Actor"
+            mesh="tileMesh"
+            material="whiteMaterial"
+            shader="basicShader"
+            collision="tileCollision"
+            transform="transform_1_0"/>
+        <Actor name="whiteTile_0_1" type="Actor"
+            mesh="tileMesh"
+            material="whiteMaterial"
+            shader="basicShader"
+            collision="tileCollision"
+            transform="transform_0_1"/>
+
+    </Actors>
+
+</Assets>
