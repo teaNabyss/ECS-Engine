@@ -10,13 +10,16 @@ using namespace tinyxml2;
 
 class AssetManager {
 private:
-	std::unordered_map<const char*, Ref<Component>> componentCatalog;
-	std::unordered_map<const char*, Ref<Actor>>     actorCatalog;
+	std::unordered_map<std::string, Ref<Component>> componentCatalog;
+	std::unordered_map<std::string, Ref<Actor>>     actorCatalog;
 	const char* filename;
 
 	//those are called inside ReadManifest
 	void BuildComponents(XMLElement* componentsRoot);
 	void BuildActors(XMLElement* actorsRoot);
+
+protected:
+	std::vector<Ref<Component>> components;
 
 public:
 	AssetManager(const char* filename_);
@@ -30,21 +33,9 @@ public:
 
 	Ref<Actor> GetActor(const char* name) const;
 
-
-	//Add existing component
-//we check if it's there using .get() 
-	template<typename ComponentTemplate>
-	void AddComponent(Ref<ComponentTemplate> component_) {
-		if (GetComponent<ComponentTemplate>().get() != nullptr) {
-#ifdef _DEBUG
-			std::cerr << "WARNING: Trying to add a component type that is already added - ignored\n";
-#endif
-			return;
-		}
-		//here it is
-		components.push_back(component_);
+	const std::unordered_map<std::string, Ref<Actor>>& GetActorCatalog() const {
+		return actorCatalog;
 	}
-
 	template<typename ComponentTemplate, typename ... Args>
 	void AddComponent(const char* name, Args&& ... args_) {
 		Ref<ComponentTemplate> t = std::make_shared<ComponentTemplate>(std::forward<Args>(args_)...);
@@ -63,4 +54,10 @@ public:
 		return std::dynamic_pointer_cast<ComponentTemplate>(id->second);
 	}
 
+
+	template<typename ActorTemplate, typename ... Args>
+	void AddActor(const char* name, Args&& ... args_) {
+		Ref<ActorTemplate> t = std::make_shared<ActorTemplate>(std::forward<Args>(args_)...);
+		actorCatalog[name] = t;
+	}
 };

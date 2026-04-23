@@ -89,7 +89,7 @@ public:
 	}
 
 
-	void ListComponents() const {};
+	void ListComponents() const;
 
 	//templated functions
 	template<typename ComponentTemplate>

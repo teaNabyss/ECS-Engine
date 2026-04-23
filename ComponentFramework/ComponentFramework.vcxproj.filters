@@ -174,5 +174,11 @@
     <None Include="shaders\TessTextPhongVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\multiplePhongFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\multiplePhongVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

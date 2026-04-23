@@ -1,83 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Assets>
 
-    <Components>
+	<Components>
 
-        <!-- Shaders -->
-        <Component name="basicShader" type="ShaderComponent"
-            vert="shaders/basic.vert"
-            frag="shaders/basic.frag"/>
+		<!-- Shaders -->
+		<Component name="defaultShader" type="ShaderComponent"
+            vert="shaders/multiplePhongVert.glsl"
+            frag="shaders/multiplePhongFrag.glsl"/>
 
-        <!-- Meshes -->
-        <Component name="tileMesh" type="MeshComponent"
-            mesh="meshes/Cube.obj"/>
+		<!-- Meshes -->
+		<Component name="tileMesh" type="MeshComponent"
+            mesh="meshes/CheckerPiece.obj"/>
+		
+		<Component name="boardMesh" type="MeshComponent"
+			mesh="meshes/Plane.obj"/>
 
-        <!-- Materials -->
-        <Component name="blackMaterial" type="MaterialComponent"
-            texture="textures/black.png"/>
-        <Component name="whiteMaterial" type="MaterialComponent"
-            texture="textures/white.png"/>
+		
+		<!-- Materials -->
+		<Component name="blackMaterial" type="MaterialComponent"
+            texture="textures/blackCheckerPiece.png"/>
+		
+		<Component name="whiteMaterial" type="MaterialComponent"
+            texture="textures/whiteCheckerPiece.png"/>
+		
+		<Component name="boardMaterial" type="MaterialComponent"
+            texture="textures/8x8_checkered_board.png"/>
 
-        <!-- Collision -->
-        <Component name="tileCollision" type="CollisionComponent"
-            shape="aabb"
-            cx="0" cy="0" cz="0"
-            hx="0.5" hy="0.05" hz="0.5"/>
+		
+		<!-- Transform -->
+		<Component name="boardTransform" type="TransformComponent"
+			px="0.0" py="-1.65" pz="-5.0"
+			ow="0.7071" ox="-0.7071" oy="0" oz="0"
+			sx="0.8" sy="0.8" sz="0.8"/>		
+	</Components>
 
-        <!-- Transforms for each tile position on the board -->
-        <Component name="transform_0_0" type="TransformComponent"
-            px="0" py="0" pz="0"
-            ow="1" ox="0" oy="0" oz="0"
-            sx="1" sy="1" sz="1"/>
-        <Component name="transform_1_0" type="TransformComponent"
-            px="1" py="0" pz="0"
-            ow="1" ox="0" oy="0" oz="0"
-            sx="1" sy="1" sz="1"/>
-        <Component name="transform_0_1" type="TransformComponent"
-            px="0" py="0" pz="1"
-            ow="1" ox="0" oy="0" oz="0"
-            sx="1" sy="1" sz="1"/>
-        <Component name="transform_1_1" type="TransformComponent"
-            px="1" py="0" pz="1"
-            ow="1" ox="0" oy="0" oz="0"
-            sx="1" sy="1" sz="1"/>
+	<Actors>
 
-    </Components>
+		<!-- Camera -->
+		<Actor name="mainCamera" type="CameraActor"
+            fovy="45.0" aspect="1.7778" near="0.5" far="100.0"/>
+		
+		<!-- Board -->
+		<Actor name="checkerBoard" type="Actor"
+		mesh="boardMesh"
+        material="boardMaterial"
+        shader="defaultShader"
+		transform="boardTransform"/>
+		
+		<!-- Black pieces -->
+		<Actor name="blackPieces" type="CheckerSet"
+        startRow="0" endRow="3"
+        spacing="1.0"
+        mesh="tileMesh"
+        material="blackMaterial"
+        shader="defaultShader"/>
 
-    <Actors>
-
-        <!-- Camera -->
-        <Actor name="mainCamera" type="CameraActor"
-            fovy="45.0" aspect="1.778" near="0.1" far="100.0"/>
-
-        <!-- Black tiles (even positions) -->
-        <Actor name="blackTile_0_0" type="Actor"
-            mesh="tileMesh"
-            material="blackMaterial"
-            shader="basicShader"
-            collision="tileCollision"
-            transform="transform_0_0"/>
-        <Actor name="blackTile_1_1" type="Actor"
-            mesh="tileMesh"
-            material="blackMaterial"
-            shader="basicShader"
-            collision="tileCollision"
-            transform="transform_1_1"/>
-
-        <!-- White tiles (odd positions) -->
-        <Actor name="whiteTile_1_0" type="Actor"
-            mesh="tileMesh"
-            material="whiteMaterial"
-            shader="basicShader"
-            collision="tileCollision"
-            transform="transform_1_0"/>
-        <Actor name="whiteTile_0_1" type="Actor"
-            mesh="tileMesh"
-            material="whiteMaterial"
-            shader="basicShader"
-            collision="tileCollision"
-            transform="transform_0_1"/>
-
-    </Actors>
+		<!-- White pieces -->
+		<Actor name="whitePieces" type="CheckerSet"
+		startRow="5" endRow="8"
+		spacing="1.0"
+		mesh="tileMesh"
+		material="whiteMaterial"
+		shader="defaultShader"/>
+	</Actors>
 
 </Assets>

@@ -1,5 +1,5 @@
-#ifndef SCENE2_H
-#define SCENE2_H
+#ifndef SCENE4_H
+#define SCENE4_H
 
 #include "Scene.h"
 #include "Vector.h"
@@ -8,25 +8,26 @@
 #include "Actor.h"
 #include <unordered_map>
 #include "CameraActor.h"
-
+#include "AssetManager.h"
 /// Forward declarations
 union SDL_Event;
 
-class Scene2g : public Scene {
+class Scene4g : public Scene {
 private:
 
     //std::vector<Ref<Actor>> actors;   //put all future actors in one vec
     std::unordered_map<std::string, Ref<Actor>> actors;
-    Ref<CameraActor> camera;
-
+    Ref <CameraActor> camera;
+    Ref <AssetManager> assetManager;
     bool drawInWireMode;
     bool spining = false;
 
-    Vec3 lightPos;
+    Vec3 lightPos1;
+    Vec3 lightPos2;
 
 public:
-    explicit Scene2g();
-    virtual ~Scene2g();
+    explicit Scene4g();
+    virtual ~Scene4g();
 
     virtual bool OnCreate() override;
     virtual void OnDestroy() override;

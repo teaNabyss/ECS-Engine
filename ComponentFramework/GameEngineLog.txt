@@ -1,31 +1,40 @@
-Tue Apr 14 15:32:04 2026
+Thu Apr 23 17:07:04 2026
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 32.0.101.8247
 [INFO]: Graphics card vendor Intel
 [INFO]: Graphics card name Intel(R) Arc(TM) Graphics
 [INFO]: GLSL Version 4.60 - Build 32.0.101.8247
-[INFO]: Created Scene2: 
+[INFO]: Created Scene4: 
 [INFO]: Loading assets for Actor: 
 [INFO]: Uniforms:
-"lightPos" loc:2
+"lightPos1" loc:2
+"lightPos2" loc:3
 "modelMatrix" loc:0
-"projectionMatrix" loc:3
+"projectionMatrix" loc:4
 "viewMatrix" loc:1
-"myTexture" loc:4
+"myTexture" loc:5
 
 [INFO]: Loading assets for Actor: 
-[INFO]: Uniforms:
-"lightPos" loc:2
-"modelMatrix" loc:0
-"projectionMatrix" loc:3
-"viewMatrix" loc:1
-"myTexture" loc:4
-
 [INFO]: Loading assets for Actor: 
-[INFO]: Uniforms:
-"lightPos" loc:2
-"modelMatrix" loc:0
-"projectionMatrix" loc:3
-"viewMatrix" loc:1
-"myTexture" loc:4
-
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 
+[INFO]: Loading assets for Actor: 

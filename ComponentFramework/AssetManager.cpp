@@ -20,36 +20,24 @@ void AssetManager::RemoveAllComponents() {
                                                                    
 
 void AssetManager::ReadManifest() {
-	std::cout << "ReadManifest\n";
-	XMLDocument doc;
-	doc.LoadFile("Assets.xml");
-	bool status = doc.Error();
-	if (status) {
-		std::cout << doc.ErrorIDToName(doc.ErrorID()) << std::endl;
-		return;
-	}
-	/// Jump to the first node or "root"
-	XMLElement* rootData = doc.RootElement();
+    std::cout << "ReadManifest\n";
+    XMLDocument doc;
+    doc.LoadFile(filename);
 
-	/// Loop over all the elements under the first node
-    for (XMLElement* e = rootData->FirstChildElement(); e != nullptr; e = e->NextSiblingElement()) {
-
-        /// Print the name of the element
-        std::cout << "Element [" << e->Value() << "]: ";
-
-        /// If there is text within the element (not null), print it
-        if (e->GetText() != nullptr) {
-            std::cout << e->GetText() << '\n';
-        }
-
-        /// loop over all the attributes (if any) 
-        for (const XMLAttribute* a = e->FirstAttribute(); a != nullptr; a = a->Next()) {
-            std::cout << "Attribute [" << a->Name() << ": " << a->Value() << "] ";
-        }
-        std::cout << '\n';
+    if (doc.Error()) {
+        std::cout << doc.ErrorIDToName(doc.ErrorID()) << std::endl;
+        return;
     }
-}
 
+    XMLElement* root = doc.RootElement();
+
+    XMLElement* componentsNode = root->FirstChildElement("Components");
+    if (componentsNode) BuildComponents(componentsNode);
+
+    XMLElement* actorsNode = root->FirstChildElement("Actors");
+    if (actorsNode) BuildActors(actorsNode);
+}
+    // build each component declared in file
     void AssetManager::BuildComponents(XMLElement * componentsRoot) {
         for (XMLElement* e = componentsRoot->FirstChildElement("Component");
             e != nullptr; e = e->NextSiblingElement("Component"))
@@ -134,6 +122,7 @@ void AssetManager::ReadManifest() {
         }
     }
 
+    //loop throuh all actors and add components 
     void AssetManager::BuildActors(XMLElement* actorsRoot) {
         for (XMLElement* e = actorsRoot->FirstChildElement("Actor");
             e != nullptr; e = e->NextSiblingElement("Actor"))
@@ -142,15 +131,50 @@ void AssetManager::ReadManifest() {
             const char* type = e->Attribute("type");
             if (!name || !type) continue;
 
-            if (strcmp(type, "CameraActor") == 0) {
+            std::string typeStr = type;
+
+            if (typeStr == "CameraActor") {
                 float fovy = e->FloatAttribute("fovy", 45.0f);
-                float aspect = e->FloatAttribute("aspect", 1.778f);
-                float near = e->FloatAttribute("near", 0.1f);
+                float aspect = e->FloatAttribute("aspect", 16.0f / 9.0f);
+                float near = e->FloatAttribute("near", 0.5f);
                 float far = e->FloatAttribute("far", 100.0f);
 
-                AddComponent<CameraActor>(name, nullptr, fovy, aspect, near, far);
+                AddActor<CameraActor>(name, nullptr, fovy, aspect, near, far);
             }
-            else {
+
+            // i don't like this way
+            else if (typeStr == "CheckerSet") {
+                int startRow = e->IntAttribute("startRow", 0);
+                int endRow = e->IntAttribute("endRow", 3);
+                float spacing = e->FloatAttribute("spacing", 1.0f);
+                const char* mesh = e->Attribute("mesh");
+                const char* material = e->Attribute("material");
+                const char* shader = e->Attribute("shader");
+
+                for (int row = startRow; row < endRow; row++) {
+                    for (int col = 0; col < 8; col++) {
+                        if ((row + col) % 2 == 0) continue;
+
+                        std::string pieceName = std::string(name) + "_" +
+                            std::to_string(row) + "_" +
+                            std::to_string(col);
+
+                        Ref<Actor> actor = std::make_shared<Actor>(nullptr);
+                        if (mesh)     actor->AddComponent(GetComponent<MeshComponent>(mesh));
+                        if (material) actor->AddComponent(GetComponent<MaterialComponent>(material));
+                        if (shader)   actor->AddComponent(GetComponent<ShaderComponent>(shader));
+
+                        Vec3 pos{ (col - 3.5f) * spacing, -1.5f, (row - 3.5f + -5.0f) * spacing };                        
+                        Quaternion orientation = QMath::angleAxisRotation(90.0f, Vec3(1.0f, 0.0f, 0.0f));
+                        Vec3 scale{ 0.08f, 0.08f, 0.08f };
+                        actor->AddComponent<TransformComponent>(nullptr, pos, orientation, scale);
+
+                        actor->OnCreate();  
+                        actorCatalog[pieceName] = actor;
+                    }
+                }
+            }
+            else if (typeStr == "Actor"){
                 // regular Actor with components attached
                 Ref<Actor> actor = std::make_shared<Actor>(nullptr);
 
@@ -161,6 +185,7 @@ void AssetManager::ReadManifest() {
                 const char* shader = e->Attribute("shader");
                 const char* transform = e->Attribute("transform");
 
+                // if there is such component, we will add it
                 if (collision) actor->AddComponent(GetComponent<CollisionComponent>(collision));
                 if (mesh)      actor->AddComponent(GetComponent<MeshComponent>(mesh));
                 if (material)  actor->AddComponent(GetComponent<MaterialComponent>(material));
@@ -168,11 +193,11 @@ void AssetManager::ReadManifest() {
                 if (shader)    actor->AddComponent(GetComponent<ShaderComponent>(shader));
                 if (transform) actor->AddComponent(GetComponent<TransformComponent>(transform));
 
-                componentCatalog[name] = actor;
+                actor->OnCreate();
+                actorCatalog[name] = actor;
             }
         }
-    }
-Ref<Actor> AssetManager::GetActor(const char* name) const {
+    }Ref<Actor> AssetManager::GetActor(const char* name) const {
     auto id = actorCatalog.find(name);
      if (id == actorCatalog.end()) {
         Debug::Error("Can't find requested actor", __FILE__, __LINE__);           

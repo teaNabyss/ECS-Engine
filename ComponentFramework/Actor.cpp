@@ -54,7 +54,6 @@ void Actor::ListComponents() const {
 	}
 	std::cout << '\n';
 }
-
 /*
 Matrix4 Actor::GetModelMatrix() {
 	TransformComponent* transform = GetComponent<TransformComponent>();

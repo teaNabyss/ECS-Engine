@@ -179,6 +179,8 @@
   <ItemGroup>
     <None Include="shaders\defaultFrag.glsl" />
     <None Include="shaders\defaultVert.glsl" />
+    <None Include="shaders\multiplePhongFrag.glsl" />
+    <None Include="shaders\multiplePhongVert.glsl" />
     <None Include="shaders\TessTextPhongCtrl.glsl" />
     <None Include="shaders\TessTextPhongEval.glsl" />
     <None Include="shaders\TessTextPhongFrag.glsl" />
