@@ -17,6 +17,7 @@ private:
 
     //std::vector<Ref<Actor>> actors;   //put all future actors in one vec
     std::unordered_map<std::string, Ref<Actor>> actors;
+    Ref<Actor> boardActor;
     Ref <CameraActor> camera;
     Ref <AssetManager> assetManager;
     bool drawInWireMode;

@@ -22,7 +22,7 @@ template<typename ComponentTemplate>
 void AssetManager::RemoveAllComponents() {
 	componentCatalog.clear();
 }
-                                                                   
+                               
 
 void AssetManager::ReadManifest() {
     std::cout << "ReadManifest\n";
@@ -127,6 +127,16 @@ void AssetManager::ReadManifest() {
         }
     }
 
+    // helper to parse actorType string from XML into enum
+    static ActorType ParseActorType(const char* t) {
+         if (!t)                      return ActorType::BOX;
+         if (strcmp(t, "SPHERE") == 0) return ActorType::SPHERE;
+         if (strcmp(t, "PLANE") == 0) return ActorType::PLANE;
+         if (strcmp(t, "LIGHT") == 0) return ActorType::LIGHT;
+        return ActorType::BOX;
+    }
+
+
     //loop through all actors and add components 
     void AssetManager::BuildActors(XMLElement* actorsRoot) {
         for (XMLElement* e = actorsRoot->FirstChildElement("Actor");
@@ -155,6 +165,7 @@ void AssetManager::ReadManifest() {
                 const char* mesh = e->Attribute("mesh");
                 const char* material = e->Attribute("material");
                 const char* shader = e->Attribute("shader");
+                ActorType actorType = ParseActorType(e->Attribute("actorType"));
 
                 for (int row = startRow; row < endRow; row++) {
                     for (int col = 0; col < 8; col++) {
@@ -165,13 +176,17 @@ void AssetManager::ReadManifest() {
                             std::to_string(col);
 
                         Ref<Actor> actor = std::make_shared<Actor>(nullptr);
+
+                        // read what type of actor is set in file
+                        actor->SetType(actorType);
+
                         if (mesh)     actor->AddComponent(GetComponent<MeshComponent>(mesh));
                         if (material) actor->AddComponent(GetComponent<MaterialComponent>(material));
                         if (shader)   actor->AddComponent(GetComponent<ShaderComponent>(shader));
 
-                        Vec3 pos{ (col - 3.5f) * spacing, -1.5f, (row - 3.5f + -5.0f) * spacing };                        
-                        Quaternion orientation = QMath::angleAxisRotation(90.0f, Vec3(1.0f, 0.0f, 0.0f));
-                        Vec3 scale{ 0.08f, 0.08f, 0.08f };
+                        Vec3 pos{ (col - 3.5f) * spacing,  (row - 3.5f + -5.0f) * spacing, 0.7f };                        
+                        Quaternion orientation = QMath::angleAxisRotation(1.0f, Vec3(1.0f, 0.0f, 0.0f));
+                        Vec3 scale{ 0.06f, 0.06f, 0.06f };
                         actor->AddComponent<TransformComponent>(nullptr, pos, orientation, scale);
 
                         actor->OnCreate();  
@@ -182,6 +197,9 @@ void AssetManager::ReadManifest() {
             else if (typeStr == "Actor"){
                 // regular Actor with components attached
                 Ref<Actor> actor = std::make_shared<Actor>(nullptr);
+                // read what type of actor is set in file
+                actor->SetType(ParseActorType(e->Attribute("actorType")));
+
 
                 const char* collision = e->Attribute("collision");
                 const char* mesh = e->Attribute("mesh");

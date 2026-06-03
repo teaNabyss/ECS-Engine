@@ -41,14 +41,14 @@
             fovy="45.0" aspect="1.7778" near="0.5" far="100.0"/>
 		
 		<!-- Board -->
-		<Actor name="checkerBoard" type="Actor"
+		<Actor name="checkerBoard" type="Actor" actorType="PLANE"
 		mesh="boardMesh"
         material="boardMaterial"
         shader="defaultShader"
 		transform="boardTransform"/>
 		
 		<!-- Black pieces -->
-		<Actor name="blackPieces" type="CheckerSet"
+		<Actor name="blackPieces" type="CheckerSet" actorType="SPHERE"
         startRow="0" endRow="3"
         spacing="1.0"
         mesh="tileMesh"
@@ -56,7 +56,7 @@
         shader="defaultShader"/>
 
 		<!-- White pieces -->
-		<Actor name="whitePieces" type="CheckerSet"
+		<Actor name="whitePieces" type="CheckerSet" actorType="SPHERE"
 		startRow="5" endRow="8"
 		spacing="1.0"
 		mesh="tileMesh"

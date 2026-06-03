@@ -31,6 +31,9 @@ public:
 		orientation = orientation_;
 		scale = scale_;
 	}
+
+	void SetParent(Component* parent_) { parent = parent_; }
+
 	void Rotate(const Quaternion& deltaQuat)
 	{
 		orientation = orientation * deltaQuat;

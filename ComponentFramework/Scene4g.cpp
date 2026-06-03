@@ -35,6 +35,21 @@ bool Scene4g::OnCreate() {
 	}
 
 	for (auto& pair : actors) {
+		if (pair.second->GetType() == ActorType::PLANE) {
+			boardActor = pair.second;
+			break; // found it, stop looking
+		}
+	} 
+
+	for (auto& pair : actors) {
+		if (pair.second->GetType() == ActorType::SPHERE) {
+			Ref<TransformComponent> tc = pair.second->GetComponent<TransformComponent>();
+			if (tc) tc->SetParent(boardActor.get());
+		}
+	}
+
+
+	for (auto& pair : actors) {
 		Ref<Actor> actor = pair.second;
 		Ref<TransformComponent> tc = actor->GetComponent<TransformComponent>();
 		std::cout << pair.first << " has transform: " << (tc != nullptr ? "YES" : "NO") << "\n";
@@ -88,32 +103,43 @@ void Scene4g::Update(const float deltaTime) {
 			}
 		}
 	}*/
+
+
+	if (spining) {
+		for (auto& pair : actors) {
+			if (pair.second->GetType() == ActorType::PLANE) {
+				boardActor = pair.second; // or just use it directly
+				Ref<TransformComponent> tc = pair.second->GetComponent<TransformComponent>();
+				if (tc) tc->Rotate(QMath::angleAxisRotation(deltaTime * 45.0f, Vec3(0.0f, 1.0f, 0.0f)));
+			}
+		}
+	}
 }
 
 void Scene4g::Render() const {
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
-	for (auto& pair : actors) {
-		Ref<Actor> actor = pair.second;
+    for (auto& pair : actors) {
+        Ref<Actor> actor = pair.second;
 
-		Ref<ShaderComponent>    shader = actor->GetComponent<ShaderComponent>();
-		Ref<TransformComponent> transform = actor->GetComponent<TransformComponent>();
-		Ref<MaterialComponent>  material = actor->GetComponent<MaterialComponent>();
-		Ref<MeshComponent>      mesh = actor->GetComponent<MeshComponent>();
+        Ref<ShaderComponent>    shader    = actor->GetComponent<ShaderComponent>();
+        Ref<TransformComponent> transform = actor->GetComponent<TransformComponent>();
+        Ref<MaterialComponent>  material  = actor->GetComponent<MaterialComponent>();
+        Ref<MeshComponent>      mesh      = actor->GetComponent<MeshComponent>();
 
-		if (!shader || !transform || !material || !mesh) continue;
+        if (!shader || !transform || !material || !mesh) continue;
 
-		glUseProgram(shader->GetProgram());
-		glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-		glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, transform->GetModelMatrix());
-		glUniform3fv(shader->GetUniformID("lightPos1"), 1, lightPos1);
-		glUniform3fv(shader->GetUniformID("lightPos2"), 1, lightPos2);
+        glUseProgram(shader->GetProgram());
+        glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+        glUniformMatrix4fv(shader->GetUniformID("viewMatrix"),       1, GL_FALSE, camera->GetViewMatrix());
+        glUniformMatrix4fv(shader->GetUniformID("modelMatrix"),      1, GL_FALSE, transform->GetModelMatrix());
+        glUniform3fv(shader->GetUniformID("lightPos1"), 1, lightPos1);
+        glUniform3fv(shader->GetUniformID("lightPos2"), 1, lightPos2);
 
-		glBindTexture(GL_TEXTURE_2D, material->getTextureID());
-		mesh->Render();
-	}
+        glBindTexture(GL_TEXTURE_2D, material->getTextureID());
+        mesh->Render();
+    }
 }
