@@ -13,6 +13,11 @@ AssetManager::AssetManager(const char* filename_) {
 
 AssetManager::~AssetManager() {}
 
+bool AssetManager::OnCreate() {
+    ReadManifest();
+    return true;
+}
+
 template<typename ComponentTemplate>
 void AssetManager::RemoveAllComponents() {
 	componentCatalog.clear();
@@ -122,7 +127,7 @@ void AssetManager::ReadManifest() {
         }
     }
 
-    //loop throuh all actors and add components 
+    //loop through all actors and add components 
     void AssetManager::BuildActors(XMLElement* actorsRoot) {
         for (XMLElement* e = actorsRoot->FirstChildElement("Actor");
             e != nullptr; e = e->NextSiblingElement("Actor"))

@@ -98,19 +98,22 @@ void Scene4g::Render() const {
 
 	for (auto& pair : actors) {
 		Ref<Actor> actor = pair.second;
-		Ref<ShaderComponent> shader = actor->GetComponent<ShaderComponent>();
 
-		if (!shader) continue;  // skip actors without shader (like camera)
+		Ref<ShaderComponent>    shader = actor->GetComponent<ShaderComponent>();
+		Ref<TransformComponent> transform = actor->GetComponent<TransformComponent>();
+		Ref<MaterialComponent>  material = actor->GetComponent<MaterialComponent>();
+		Ref<MeshComponent>      mesh = actor->GetComponent<MeshComponent>();
+
+		if (!shader || !transform || !material || !mesh) continue;
 
 		glUseProgram(shader->GetProgram());
 		glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 		glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE,
-			actor->GetComponent<TransformComponent>()->GetModelMatrix());
+		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, transform->GetModelMatrix());
 		glUniform3fv(shader->GetUniformID("lightPos1"), 1, lightPos1);
 		glUniform3fv(shader->GetUniformID("lightPos2"), 1, lightPos2);
 
-		glBindTexture(GL_TEXTURE_2D, actor->GetComponent<MaterialComponent>()->getTextureID());
-		actor->GetComponent<MeshComponent>()->Render();
+		glBindTexture(GL_TEXTURE_2D, material->getTextureID());
+		mesh->Render();
 	}
 }
