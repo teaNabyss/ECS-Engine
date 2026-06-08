@@ -1,12 +1,12 @@
 #include "AssetManager.h"
 #include "CameraActor.h"
+#include "SkyBox.h"
 #include "CollisionComponent.h"
 #include "MaterialComponent.h"
 #include "MeshComponent.h"
 #include "PhysicsComponent.h"
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
-
 AssetManager::AssetManager(const char* filename_) {
 	filename = filename_;
 }
@@ -42,6 +42,7 @@ void AssetManager::ReadManifest() {
     XMLElement* actorsNode = root->FirstChildElement("Actors");
     if (actorsNode) BuildActors(actorsNode);
 }
+
     // build each component declared in file
     void AssetManager::BuildComponents(XMLElement * componentsRoot) {
         for (XMLElement* e = componentsRoot->FirstChildElement("Component");
@@ -157,6 +158,14 @@ void AssetManager::ReadManifest() {
                 AddActor<CameraActor>(name, nullptr, fovy, aspect, near, far);
             }
 
+            else if (typeStr == "SkyBox") {
+                AddActor<SkyBox>(name, nullptr,
+                    e->Attribute("posX"), e->Attribute("negX"),
+                    e->Attribute("posY"), e->Attribute("negY"),
+                    e->Attribute("posZ"), e->Attribute("negZ"),
+                    e->Attribute("vert"), e->Attribute("frag"));
+            }
+
             // i don't like this way
             else if (typeStr == "CheckerSet") {
                 int startRow = e->IntAttribute("startRow", 0);
@@ -194,6 +203,7 @@ void AssetManager::ReadManifest() {
                     }
                 }
             }
+
             else if (typeStr == "Actor"){
                 // regular Actor with components attached
                 Ref<Actor> actor = std::make_shared<Actor>(nullptr);
