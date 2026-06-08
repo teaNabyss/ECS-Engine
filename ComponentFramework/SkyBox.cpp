@@ -62,20 +62,7 @@ void SkyBox::OnDestroy() {
 }
 
 void SkyBox::Render() const {
-    Ref<ShaderComponent> shader = GetComponent<ShaderComponent>();
-    Ref<MeshComponent>   mesh = GetComponent<MeshComponent>();
-    if (!shader || !mesh) return;
-
-    // depth trick — skybox always at max depth but still visible
-    glDepthFunc(GL_LEQUAL);
-
-    glUseProgram(shader->GetProgram());
-    glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, projectionMatrix);
-    glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, MMath::toMatrix4(orientation));
-
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-    mesh->Render();
+    GetComponent<MeshComponent>()->Render();
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-    glDepthFunc(GL_LESS); // restore default
 }

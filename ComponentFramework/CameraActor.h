@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "SkyBox.h"
 #include <MMath.h>
 #include <QMath.h>
 using namespace MATH;
@@ -10,6 +11,8 @@ private:
 	Matrix4 viewMatrix;
 	Quaternion orientation;
 	Matrix4 translate;
+
+	Ref<SkyBox> skybox;
 
 public:
 	CameraActor(Actor* parent_, float fovy, float aspectRatio, float near, float far);
@@ -25,7 +28,7 @@ public:
 		return projectionMatrix;
 	}
 
-
+	void RenderSkyBox() const;
 
 };
 
