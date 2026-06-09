@@ -1,5 +1,5 @@
 ## 🔍 About
-A personal game engine project developed as part of [course/self-study — fill in].
+A personal game engine project developed as part of [course/self-study].
 Built without a third-party engine, focusing on understanding core rendering and architecture from the ground up.
 
 ## Features
@@ -13,15 +13,15 @@ SDL3 — window management and event handling
 
 ## Architecture
 Engine
-├── AssetManager      — XML manifest reader, builds component & actor catalogs
-├── Actor             — base game object, holds components
-│   ├── CameraActor   — projection/view matrices, skybox rendering
-│   └── SkyBox        — cubemap texture, skybox draw
-├── Components
-│   ├── TransformComponent   — position, rotation, scale + parent inheritance
-│   ├── MeshComponent        — geometry loading and rendering
-│   ├── ShaderComponent      — GLSL shader program
-│   ├── MaterialComponent    — texture binding
-│   ├── PhysicsComponent     — mass and physics data
-│   └── CollisionComponent   — sphere / AABB / plane collision shapes
-└── Scene4g           — currently active scene, update and render loop
+- AssetManager — XML manifest reader, builds component & actor catalogs
+- Actor — base game object, holds components
+- CameraActor — projection/view matrices, skybox rendering
+--SkyBox — cubemap texture, skybox draw
+- Components
+-- TransformComponent   — position, rotation, scale + parent inheritance
+-- MeshComponent        — geometry loading and rendering
+-- ShaderComponent      — GLSL shader program
+-- MaterialComponent    — texture binding
+-- PhysicsComponent     — mass and physics data
+--- CollisionComponent   — sphere / AABB / plane collision shapes
+- Scene5 — currently active scene, update and render 
