@@ -28,6 +28,7 @@ public:
 		return projectionMatrix;
 	}
 
+	void SetSkyBox(Ref<SkyBox> skybox_) { skybox = skybox_; }
 	void RenderSkyBox() const;
 
 };

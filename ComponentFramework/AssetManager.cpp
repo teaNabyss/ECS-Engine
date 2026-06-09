@@ -149,6 +149,8 @@ void AssetManager::ReadManifest() {
 
             std::string typeStr = type;
 
+
+            // >>> CAMERA <<<
             if (typeStr == "CameraActor") {
                 float fovy = e->FloatAttribute("fovy", 45.0f);
                 float aspect = e->FloatAttribute("aspect", 16.0f / 9.0f);
@@ -157,16 +159,26 @@ void AssetManager::ReadManifest() {
 
                 AddActor<CameraActor>(name, nullptr, fovy, aspect, near, far);
             }
-
+            // >>> SKYBOX <<<
             else if (typeStr == "SkyBox") {
-                AddActor<SkyBox>(name, nullptr,
+                Ref<SkyBox> skybox = std::make_shared<SkyBox>(nullptr,
                     e->Attribute("posX"), e->Attribute("negX"),
                     e->Attribute("posY"), e->Attribute("negY"),
-                    e->Attribute("posZ"), e->Attribute("negZ"),
-                    e->Attribute("vert"), e->Attribute("frag"));
+                    e->Attribute("posZ"), e->Attribute("negZ"));
+
+                const char* mesh = e->Attribute("mesh");
+                const char* shader = e->Attribute("shader");
+
+                if (mesh)   skybox->AddComponent(GetComponent<MeshComponent>(mesh));
+                if (shader) skybox->AddComponent(GetComponent<ShaderComponent>(shader));
+
+                skybox->OnCreate();
+                actorCatalog[name] = skybox;  // stored as Ref<Actor> like everything else
             }
 
             // i don't like this way
+            //bullshit
+            //I HATE IT
             else if (typeStr == "CheckerSet") {
                 int startRow = e->IntAttribute("startRow", 0);
                 int endRow = e->IntAttribute("endRow", 3);
@@ -204,6 +216,7 @@ void AssetManager::ReadManifest() {
                 }
             }
 
+            // >>> REGULAR ACTORS <<<
             else if (typeStr == "Actor"){
                 // regular Actor with components attached
                 Ref<Actor> actor = std::make_shared<Actor>(nullptr);

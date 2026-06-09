@@ -2,7 +2,7 @@
 #include "SceneManager.h"
 #include "Timer.h"
 #include "Window.h"
-#include "Scene4g.h"
+#include "Scene5.h"
 
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
@@ -46,7 +46,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE4g);
+	BuildNewScene(SCENE_NUMBER::SCENE5);
 	/********************************************************************************/
 	return true;
 }
@@ -88,7 +88,7 @@ void SceneManager::HandleEvents() {
 			case SDL_SCANCODE_F4:
 			case SDL_SCANCODE_F5:
 		
-				BuildNewScene(SCENE_NUMBER::SCENE2g);
+				BuildNewScene(SCENE_NUMBER::SCENE5);
 				break;
 
 			default:
@@ -134,10 +134,15 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		currentScene = new Scene3g();
 		status = currentScene->OnCreate();
 		break;
-*/
 	
 	case SCENE_NUMBER::SCENE4g:
 		currentScene = new Scene4g();
+		status = currentScene->OnCreate();
+		break;
+*/
+
+	case SCENE_NUMBER::SCENE5:
+		currentScene = new Scene5();
 		status = currentScene->OnCreate();
 		break;
 

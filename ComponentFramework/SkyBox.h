@@ -20,8 +20,7 @@ public:
     SkyBox(Actor* parent_,
         const char* posX_, const char* negX_,
         const char* posY_, const char* negY_,
-        const char* posZ_, const char* negZ_,
-        const char* vert_, const char* frag_);
+        const char* posZ_, const char* negZ_);
     ~SkyBox();
 
     bool OnCreate() override;

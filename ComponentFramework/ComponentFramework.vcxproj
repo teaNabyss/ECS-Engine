@@ -142,6 +142,7 @@
     <ClCompile Include="Scene2g.cpp" />
     <ClCompile Include="Scene3g.cpp" />
     <ClCompile Include="Scene4g.cpp" />
+    <ClCompile Include="Scene5.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ShaderComponent.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Scene2g.h" />
     <ClInclude Include="Scene3g.h" />
     <ClInclude Include="Scene4g.h" />
+    <ClInclude Include="Scene5.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderComponent.h" />

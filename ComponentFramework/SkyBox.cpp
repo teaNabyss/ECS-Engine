@@ -3,8 +3,7 @@
 SkyBox::SkyBox(Actor* parent_,
     const char* posX_, const char* negX_,
     const char* posY_, const char* negY_,
-    const char* posZ_, const char* negZ_,
-    const char* vert_, const char* frag_) 
+    const char* posZ_, const char* negZ_) 
     
     : Actor(parent_),
     posX(posX_), negX(negX_),
@@ -12,8 +11,6 @@ SkyBox::SkyBox(Actor* parent_,
     posZ(posZ_), negZ(negZ_),
     textureID(0)
 {
-    AddComponent<MeshComponent>(nullptr, "meshes/Cube.obj");
-    AddComponent<ShaderComponent>(nullptr, vert_, frag_, nullptr, nullptr, nullptr);
 }
 
 SkyBox::~SkyBox() {}
@@ -25,7 +22,6 @@ bool SkyBox::OnCreate() {
     if (!mesh->OnCreate())   return false;
     if (!shader->OnCreate()) return false;
 
-    // cubemap texture — same logic as your old code
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
@@ -39,7 +35,7 @@ bool SkyBox::OnCreate() {
     for (int i = 0; i < 6; i++) {
         SDL_Surface* surface = IMG_Load(faces[i]);
         if (!surface) {
-            std::cout << "SkyboxActor: failed to load " << faces[i] << "\n";
+            std::cout << "Skybox: failed to load " << faces[i] << "\n";
             return false;
         }
         int mode = SDL_BYTESPERPIXEL(surface->format) == 4 ? GL_RGBA : GL_RGB;

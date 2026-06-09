@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Assets>
+
+	<Components>
+
+		<!-- Shaders -->
+		<Component name="defaultShader" type="ShaderComponent"
+            vert="shaders/multiplePhongVert.glsl"
+            frag="shaders/multiplePhongFrag.glsl"/>
+		
+		<Component name="skyboxShader" type="ShaderComponent"
+			vert="shaders/SkyBox Shaders/textureSkyBoxVert.glsl"
+			frag="shaders/SkyBox Shaders/textureSkyBoxFrag.glsl"/>
+		
+		<!-- Meshes -->
+		<Component name="CubeMesh" type="MeshComponent"
+            mesh="meshes/Cube.obj"/>
+
+
+	</Components>
+
+	<Actors>
+
+		<!-- Camera -->
+		<Actor name="mainCamera" type="CameraActor"
+            fovy="45.0" aspect="1.7778" near="0.5" far="100.0"/>
+		
+		<!-- SkyBox -->
+		<Actor name="skybox" type="SkyBox"
+			posX="textures/CN_Tower/posx.jpg"  negX="textures/CN_Tower/negx.jpg"
+			posY="textures/CN_Tower/posy.jpg"  negY="textures/CN_Tower/negy.jpg"
+			posZ="textures/CN_Tower/posz.jpg"  negZ="textures/CN_Tower/negz.jpg"
+			mesh="CubeMesh"
+			shader="skyboxShader"/>	
+	</Actors>
+
+</Assets>
