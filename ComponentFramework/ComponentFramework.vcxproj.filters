@@ -48,7 +48,7 @@
     <ClCompile Include="ShaderComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CameraActor.cpp">
+    <ClCompile Include="CameraActor3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
@@ -81,8 +81,11 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene5.cpp">
+    <ClCompile Include="SkyBoxScene.cpp">
       <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraActor2d.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,7 +125,7 @@
     <ClInclude Include="ShaderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CameraActor.h">
+    <ClInclude Include="CameraActor3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene2g.h">
@@ -152,8 +155,11 @@
     <ClInclude Include="SkyBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene5.h">
+    <ClInclude Include="SkyBoxScene.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraActor2d.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

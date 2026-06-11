@@ -1,7 +1,7 @@
 #include <glew.h>
 #include <iostream>
 #include <SDL.h>
-#include "Scene5.h"
+#include "SkyBoxScene.h"
 #include <MMath.h>
 #include "Debug.h"
 
@@ -10,20 +10,23 @@
 #include "MeshComponent.h"
 #include "ShaderComponent.h"
 
-Scene5::Scene5() :
-	drawInWireMode{ false }, assetManager{nullptr}, camera{ nullptr } {
-	Debug::Info("Created Scene5: ", __FILE__, __LINE__);
+SkyBoxScene::SkyBoxScene(Window& window_) :
+	window{ window_ },
+	drawInWireMode{ false }, assetManager{ nullptr }, camera{ nullptr } {
+	Debug::Info("Created SkyBoxScene: ", __FILE__, __LINE__);
 }
 
-Scene5::~Scene5() {
-	Debug::Info("Deleted Scene5: ", __FILE__, __LINE__);
+SkyBoxScene::~SkyBoxScene() {
+	Debug::Info("Deleted SkyBoxScene: ", __FILE__, __LINE__);
 }
 
-bool Scene5::OnCreate() {
+bool SkyBoxScene::OnCreate() {
+	SDL_Window* sdlWindow = window.getWindow();
+
 	lightPos1 = Vec3(0.0f, 5.0f, 0.0f);
 	lightPos2 = Vec3(0.0f, 5.0f, -15.0f);
 
-	assetManager = std::make_shared<AssetManager>("XML/SkyBoxDEBUG.xml");
+	assetManager = std::make_shared<AssetManager>("XML/SkyBoxDEBUG.xml", nullptr);
 	assetManager->ReadManifest();
 
 	for (auto& pair : assetManager->GetActorCatalog()) {
@@ -43,7 +46,7 @@ bool Scene5::OnCreate() {
 
 	std::cout << "Total actors in scene: " << actors.size() << "\n";
 
-	camera = std::dynamic_pointer_cast<CameraActor>(assetManager->GetActorCatalog().at("mainCamera"));
+	camera = std::dynamic_pointer_cast<CameraActor3d>(assetManager->GetActorCatalog().at("mainCamera"));
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -5.0f), Quaternion());
 
 	Ref<SkyBox> skybox = std::dynamic_pointer_cast<SkyBox>(assetManager->GetActorCatalog().at("skybox"));
@@ -54,10 +57,10 @@ bool Scene5::OnCreate() {
 	return true;
 }
 
-void Scene5::OnDestroy() {
+void SkyBoxScene::OnDestroy() {
 	actors.clear();
 }
-void Scene5::HandleEvents(const SDL_Event &sdlEvent) {
+void SkyBoxScene::HandleEvents(const SDL_Event &sdlEvent) {
 	switch( sdlEvent.type ) {
     case SDL_EVENT_KEY_DOWN:
 		switch (sdlEvent.key.scancode) {
@@ -80,10 +83,10 @@ void Scene5::HandleEvents(const SDL_Event &sdlEvent) {
 		break;
     }
 }
-void Scene5::Update(const float deltaTime) {
+void SkyBoxScene::Update(const float deltaTime) {
 }
 
-void Scene5::Render() const {
+void SkyBoxScene::Render() const {
 
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -1,5 +1,6 @@
 #include "AssetManager.h"
-#include "CameraActor.h"
+#include "CameraActor3d.h"
+#include "CameraActor2d.h"
 #include "SkyBox.h"
 #include "CollisionComponent.h"
 #include "MaterialComponent.h"
@@ -7,10 +8,11 @@
 #include "PhysicsComponent.h"
 #include "ShaderComponent.h"
 #include "TransformComponent.h"
-AssetManager::AssetManager(const char* filename_) {
-	filename = filename_;
-}
 
+AssetManager::AssetManager(const char* filename_, SDL_Window* window_) {
+    filename = filename_;
+    sdlWindow = window_;
+}
 AssetManager::~AssetManager() {}
 
 bool AssetManager::OnCreate() {
@@ -150,15 +152,24 @@ void AssetManager::ReadManifest() {
             std::string typeStr = type;
 
 
-            // >>> CAMERA <<<
-            if (typeStr == "CameraActor") {
+            // >>> CAMERAS <<<
+            // 
+            // >> 3D Camera <<
+            if (typeStr == "CameraActor3d") {
                 float fovy = e->FloatAttribute("fovy", 45.0f);
                 float aspect = e->FloatAttribute("aspect", 16.0f / 9.0f);
                 float near = e->FloatAttribute("near", 0.5f);
                 float far = e->FloatAttribute("far", 100.0f);
 
-                AddActor<CameraActor>(name, nullptr, fovy, aspect, near, far);
+                AddActor<CameraActor3d>(name, nullptr, fovy, aspect, near, far);
             }
+            // >> 2D Camera <<
+            else if (typeStr == "CameraActor2d") {
+                float worldWidth = e->FloatAttribute("worldWidth", 30.0f);
+                float worldHeight = e->FloatAttribute("worldHeight", 15.0f);
+                AddActor<CameraActor2d>(name, nullptr, sdlWindow, worldWidth, worldHeight);
+            }
+
             // >>> SKYBOX <<<
             else if (typeStr == "SkyBox") {
                 Ref<SkyBox> skybox = std::make_shared<SkyBox>(nullptr,

@@ -6,6 +6,7 @@
 #include "Actor.h"
 #include "Debug.h"
 #include "tinyxml2.h"
+#include <SDL.h>
 using namespace tinyxml2;
 
 class AssetManager {
@@ -13,7 +14,7 @@ private:
 	std::unordered_map<std::string, Ref<Component>> componentCatalog;
 	std::unordered_map<std::string, Ref<Actor>>     actorCatalog;
 	const char* filename;
-
+	SDL_Window* sdlWindow;
 	//those are called inside ReadManifest
 	void BuildComponents(XMLElement* componentsRoot);
 	void BuildActors(XMLElement* actorsRoot);
@@ -22,7 +23,7 @@ protected:
 	std::vector<Ref<Component>> components;
 
 public:
-	AssetManager(const char* filename_);
+	AssetManager(const char* filename_, SDL_Window* window_);
 	~AssetManager();
 	bool OnCreate();
 

@@ -1,13 +1,15 @@
 #include "CameraActor2d.h"
 #include "TransformComponent.h"
 
-CameraActor2d::CameraActor2d(Actor* parent_, float fovy, float aspectRatio, float near, float far)
-	: Actor(parent_) {
-    ndc = MMath::viewportNDC(width, height);
-    ortho = MMath::orthographic(0.0f, 30.0f, 0.0f, 15.0f, -1.0f, 1.0f);
+CameraActor2d::CameraActor2d(Actor* parent_, SDL_Window* window_, float worldWidth_, float worldHeight_)
+    : Actor(parent_), sdlWindow(window_) {
+    int w, h;
+    SDL_GetWindowSize(sdlWindow, &w, &h);
+    ndc = MMath::NDCtoViewport(w, h);
+    ortho = MMath::orthographic(0.0f, worldWidth_, 0.0f, worldHeight_, -1.0f, 1.0f);
     projectionMatrix = ndc * ortho;
-
 }
+
 CameraActor2d::~CameraActor2d() {}
 
 bool CameraActor2d::OnCreate() {

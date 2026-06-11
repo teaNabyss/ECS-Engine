@@ -5,7 +5,7 @@
 #include "Scene2g.h"
 #include "Scene3g.h"
 #include "Scene4g.h"
-#include "Scene5.h"
+#include "SkyBoxScene.h"
 
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
@@ -134,7 +134,7 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		break;
 
 	case SCENE_NUMBER::SCENE5:
-		currentScene = new Scene5();
+		currentScene = new SkyBoxScene(*window);
 		status = currentScene->OnCreate();
 		break;
 

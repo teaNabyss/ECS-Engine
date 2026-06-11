@@ -7,7 +7,7 @@
 #include <Matrix.h>
 #include "Actor.h"
 #include <unordered_map>
-#include "CameraActor.h"
+#include "CameraActor3d.h"
 #include "CollisionSystem.h" 
 /// Forward declarations
 union SDL_Event;
@@ -17,7 +17,7 @@ private:
 
     //std::vector<Ref<Actor>> actors;   //put all future actors in one vec
     std::unordered_map<std::string, Ref<Actor>> actors;
-    Ref<CameraActor> camera;
+    Ref<CameraActor3d> camera;
     CollisionSystem collisionSystem; 
     bool drawInWireMode;
     bool spining = false;

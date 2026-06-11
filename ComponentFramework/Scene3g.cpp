@@ -23,7 +23,7 @@ Scene3g::~Scene3g() {
 }
 
 bool Scene3g::OnCreate() {
-	camera = std::make_shared<CameraActor>(nullptr, 45.0f, 16.0f / 9.0f, 0.5f, 100.0f);
+	camera = std::make_shared<CameraActor3d>(nullptr, 45.0f, 16.0f / 9.0f, 0.5f, 100.0f);
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -5.0f), Quaternion());
 	camera->OnCreate();
 

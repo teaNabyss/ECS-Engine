@@ -22,7 +22,7 @@
 	<Actors>
 
 		<!-- Camera -->
-		<Actor name="mainCamera" type="CameraActor"
+		<Actor name="mainCamera" type="CameraActor3d"
             fovy="45.0" aspect="1.7778" near="0.5" far="100.0"/>
 		
 		<!-- SkyBox -->

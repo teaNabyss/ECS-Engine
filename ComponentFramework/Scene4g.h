@@ -7,9 +7,8 @@
 #include <Matrix.h>
 #include "Actor.h"
 #include <unordered_map>
-#include "CameraActor.h"
+#include "CameraActor3d.h"
 #include "AssetManager.h"
-/// Forward declarations
 union SDL_Event;
 
 class Scene4g : public Scene {
@@ -18,7 +17,7 @@ private:
     //std::vector<Ref<Actor>> actors;   //put all future actors in one vec
     std::unordered_map<std::string, Ref<Actor>> actors;
     Ref<Actor> boardActor;
-    Ref <CameraActor> camera;
+    Ref <CameraActor3d> camera;
     Ref <AssetManager> assetManager;
     bool drawInWireMode;
     bool spining = false;

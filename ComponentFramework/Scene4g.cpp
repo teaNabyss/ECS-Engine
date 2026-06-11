@@ -23,7 +23,7 @@ bool Scene4g::OnCreate() {
 	lightPos1 = Vec3(0.0f, 5.0f, 0.0f);
 	lightPos2 = Vec3(0.0f, 5.0f, -15.0f);
 
-	assetManager = std::make_shared<AssetManager>("XML/my xml.xml");
+	assetManager = std::make_shared<AssetManager>("XML/my xml.xml", nullptr);
 	assetManager->ReadManifest();
 
 	for (auto& pair : assetManager->GetActorCatalog()) {
@@ -57,7 +57,7 @@ bool Scene4g::OnCreate() {
 
 	std::cout << "Total actors in scene: " << actors.size() << "\n";
 
-	camera = std::dynamic_pointer_cast<CameraActor>(assetManager->GetActorCatalog().at("mainCamera"));
+	camera = std::dynamic_pointer_cast<CameraActor3d>(assetManager->GetActorCatalog().at("mainCamera"));
 	camera->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, 0.0f, -5.0f), Quaternion());
 	camera->OnCreate();
 

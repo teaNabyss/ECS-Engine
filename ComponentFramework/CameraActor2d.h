@@ -3,20 +3,24 @@
 #include "SkyBox.h"
 #include <MMath.h>
 #include <QMath.h>
+#include <SDL.h>
 using namespace MATH;
 class CameraActor2d : public Actor
 {
 private:
-	int width = 1280;
-	int height = 720;
+
 	Matrix4 ndc;
 	Matrix4 ortho;
 	Matrix4 projectionMatrix;
 	SDL_FRect cameraRect;
+	Matrix4 viewMatrix;
 	Vec3 pos;
 
+	SDL_Window* sdlWindow;
+
 public:
-	CameraActor2d(Actor* parent_, float fovy, float aspectRatio, float near, float far);
+	CameraActor2d(Actor* parent_, SDL_Window* window_, 
+					float worldWidth_, float worldHeight_);	
 	~CameraActor2d();
 	bool OnCreate();
 
