@@ -1,15 +1,15 @@
-#include "CameraActor.h"
+#include "CameraActor3d.h"
 #include "TransformComponent.h"
 
-CameraActor::CameraActor(Actor* parent_, float fovy, float aspectRatio, float near, float far)
+CameraActor3d::CameraActor3d(Actor* parent_, float fovy, float aspectRatio, float near, float far)
 	: Actor(parent_) {
 	projectionMatrix = MMath::perspective(fovy, aspectRatio, near, far);
 	viewMatrix.loadIdentity();
 
 }
-CameraActor::~CameraActor() {}
+CameraActor3d::~CameraActor3d() {}
 
-bool CameraActor::OnCreate() {
+bool CameraActor3d::OnCreate() {
 	Ref <TransformComponent> tc = GetComponent<TransformComponent>();
 	if (tc != nullptr) {
 		viewMatrix = tc->GetTransformMatrix();
@@ -18,7 +18,7 @@ bool CameraActor::OnCreate() {
 	return true;
 }
 
-void CameraActor::RenderSkyBox() const {
+void CameraActor3d::RenderSkyBox() const {
     if (!skybox) return;
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

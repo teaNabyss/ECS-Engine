@@ -4,7 +4,7 @@
 #include <MMath.h>
 #include <QMath.h>
 using namespace MATH;
-class CameraActor : public Actor
+class CameraActor3d : public Actor
 {
 private:
 	Matrix4 projectionMatrix;
@@ -15,8 +15,8 @@ private:
 	Ref<SkyBox> skybox;
 
 public:
-	CameraActor(Actor* parent_, float fovy, float aspectRatio, float near, float far);
-	~CameraActor();
+	CameraActor3d(Actor* parent_, float fovy, float aspectRatio, float near, float far);
+	~CameraActor3d();
 	bool OnCreate();
 
 	/// Some getters and setters
