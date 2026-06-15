@@ -1,16 +1,17 @@
-Thu Jun 11 15:37:33 2026
+Mon Jun 15 16:28:25 2026
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 32.0.101.8247
 [INFO]: Graphics card vendor Intel
 [INFO]: Graphics card name Intel(R) Arc(TM) Graphics
 [INFO]: GLSL Version 4.60 - Build 32.0.101.8247
-[INFO]: Created SkyBoxScene: 
+[INFO]: Created Camera2dScene: 
+[INFO]: Loading assets for Actor: 
 [INFO]: Uniforms:
+"modelMatrix" loc:2
 "projectionMatrix" loc:0
 "viewMatrix" loc:1
-"myTexture" loc:2
 
 [INFO]: Deleting the SceneManager
-[INFO]: Deleted SkyBoxScene: 
+[INFO]: Deleted Camera2dScene: 
 [INFO]: Deleting assets for Actor: 
 [INFO]: Deleting assets for Actor: 

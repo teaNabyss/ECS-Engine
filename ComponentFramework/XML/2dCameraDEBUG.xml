@@ -5,63 +5,36 @@
 
 		<!-- Shaders -->
 		<Component name="defaultShader" type="ShaderComponent"
-            vert="shaders/multiplePhongVert.glsl"
-            frag="shaders/multiplePhongFrag.glsl"/>
-
-		<!-- Meshes -->
-		<Component name="tileMesh" type="MeshComponent"
-            mesh="meshes/CheckerPiece.obj"/>
-		
-		<Component name="boardMesh" type="MeshComponent"
-			mesh="meshes/Plane.obj"/>
-
-		
+            vert="shaders/defaultVert2d.glsl"
+            frag="shaders/defaultFrag2d.glsl"/>
+		dont send window do
 		<!-- Materials -->
-		<Component name="blackMaterial" type="MaterialComponent"
-            texture="textures/blackCheckerPiece.png"/>
+		<Component name="MikuMaterial" type="MaterialComponent"
+            texture="textures/MikuPic.png"/>
 		
-		<Component name="whiteMaterial" type="MaterialComponent"
-            texture="textures/whiteCheckerPiece.png"/>
-		
-		<Component name="boardMaterial" type="MaterialComponent"
-            texture="textures/8x8_checkered_board.png"/>
-
+		<!--  Meshes  -->
+		<Component name="MikuMesh" type="MeshComponent"
+			mesh="meshes/Plane.obj"/>
 		
 		<!-- Transform -->
-		<Component name="boardTransform" type="TransformComponent"
-			px="0.0" py="-1.65" pz="-5.0"
-			ow="0.7071" ox="-0.7071" oy="0" oz="0"
-			sx="0.8" sy="0.8" sz="0.8"/>		
+		<Component name="MikuTransform" type="TransformComponent"
+			px="2.0" py="2.0" pz="0.0"
+			ow="1.0" ox="0.0" oy="0" oz="0"
+			sx="1.0" sy="1.0" sz="1.0"/>		
 	</Components>
 
 	<Actors>
 
 		<!-- Camera -->
-		<Actor name="mainCamera" type="CameraActor"
-            fovy="45.0" aspect="1.7778" near="0.5" far="100.0"/>
+		<Actor name="mainCamera" type="CameraActor2d"
+              worldWidth="30.0" worldHeight="15.0"/>
 		
-		<!-- Board -->
-		<Actor name="checkerBoard" type="Actor" actorType="PLANE"
-		mesh="boardMesh"
-        material="boardMaterial"
-        shader="defaultShader"
-		transform="boardTransform"/>
-		
-		<!-- Black pieces -->
-		<Actor name="blackPieces" type="CheckerSet" actorType="SPHERE"
-        startRow="0" endRow="3"
-        spacing="1.0"
-        mesh="tileMesh"
-        material="blackMaterial"
-        shader="defaultShader"/>
-
-		<!-- White pieces -->
-		<Actor name="whitePieces" type="CheckerSet" actorType="SPHERE"
-		startRow="5" endRow="8"
-		spacing="1.0"
-		mesh="tileMesh"
-		material="whiteMaterial"
-		shader="defaultShader"/>
+		<!-- Hatsune Miku -->
+		<Actor name="Miku" type="Actor" actorType="PLANE"
+		mesh = "MikuMesh"
+		material="MikuMaterial"
+		shader="defaultShader"
+		transform="MikuTransform"/>
 	</Actors>
 
 </Assets>

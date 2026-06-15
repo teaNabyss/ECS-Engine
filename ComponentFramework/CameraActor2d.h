@@ -1,6 +1,5 @@
 #pragma once
 #include "Actor.h"
-#include "SkyBox.h"
 #include <MMath.h>
 #include <QMath.h>
 #include <SDL.h>
@@ -9,7 +8,6 @@ class CameraActor2d : public Actor
 {
 private:
 
-	Matrix4 ndc;
 	Matrix4 ortho;
 	Matrix4 projectionMatrix;
 	SDL_FRect cameraRect;
@@ -28,9 +26,8 @@ public:
 	void Follow(const Vec3& targetPos);
 	Vec3 WorldToScreen(const Vec3& worldPos) const;
 
-	Matrix4 GetProjectionMatrix() const {
-		return projectionMatrix;
-	}
+	Matrix4 GetProjectionMatrix() const { return projectionMatrix; }
 
+	Matrix4 GetViewMatrix() const { return MMath::scale(1.0f, 1.0f, 1.0f); }
 };
 

@@ -6,6 +6,7 @@
 #include "Scene3g.h"
 #include "Scene4g.h"
 #include "SkyBoxScene.h"
+#include "Camera2dScene.h"
 
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
@@ -49,7 +50,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE5);
+	BuildNewScene(SCENE_NUMBER::SCENE6);
 	/********************************************************************************/
 	return true;
 }
@@ -91,7 +92,7 @@ void SceneManager::HandleEvents() {
 			case SDL_SCANCODE_F4:
 			case SDL_SCANCODE_F5:
 		
-				BuildNewScene(SCENE_NUMBER::SCENE5);
+				BuildNewScene(SCENE_NUMBER::SCENE6);
 				break;
 
 			default:
@@ -135,6 +136,10 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 
 	case SCENE_NUMBER::SCENE5:
 		currentScene = new SkyBoxScene(*window);
+		status = currentScene->OnCreate();
+		break;
+	case SCENE_NUMBER::SCENE6:
+		currentScene = new Camera2dScene(*window);
 		status = currentScene->OnCreate();
 		break;
 

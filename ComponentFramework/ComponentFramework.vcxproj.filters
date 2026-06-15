@@ -87,6 +87,9 @@
     <ClCompile Include="CameraActor2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Camera2dScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h">
@@ -161,6 +164,9 @@
     <ClInclude Include="CameraActor2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Camera2dScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt">
@@ -196,6 +202,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\multiplePhongVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\defaultFrag2d.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\defaultVert2d.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
