@@ -20,7 +20,9 @@ public:
     PhysicsComponent(Component* parent_, float mass_);
     void SetVelocity(Vec3 vel_) { vel = vel_; }
     Vec3 GetVelocity() { return vel; };
+    void SetTransform(Ref<TransformComponent> tc_) { tc = tc_; }
     void Update(float deltaTime);
+    void UpdateRolling(float deltaTime);
     void ApplyTorque(Vec3 torque);
     void UpdateOrientation(float deltaTime);
     void UpdateAngularVel(Vec3 surfaceNormal);

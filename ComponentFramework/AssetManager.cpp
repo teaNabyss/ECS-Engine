@@ -167,9 +167,14 @@ void AssetManager::ReadManifest() {
             else if (typeStr == "CameraActor2d") {
                 float worldWidth = e->FloatAttribute("worldWidth", 30.0f);
                 float worldHeight = e->FloatAttribute("worldHeight", 15.0f);
-                AddActor<CameraActor2d>(name, nullptr, sdlWindow, worldWidth, worldHeight);
-            }
+                const char* transform = e->Attribute("transform");
 
+                AddActor<CameraActor2d>(name, nullptr, sdlWindow, worldWidth, worldHeight);
+
+                if (transform) {
+                    actorCatalog[name]->AddComponent(GetComponent<TransformComponent>(transform));
+                }
+            }
             // >>> SKYBOX <<<
             else if (typeStr == "SkyBox") {
                 Ref<SkyBox> skybox = std::make_shared<SkyBox>(nullptr,
@@ -249,6 +254,10 @@ void AssetManager::ReadManifest() {
                 if (physics)   actor->AddComponent(GetComponent<PhysicsComponent>(physics));
                 if (shader)    actor->AddComponent(GetComponent<ShaderComponent>(shader));
                 if (transform) actor->AddComponent(GetComponent<TransformComponent>(transform));
+
+
+                Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
+                if (pc) pc->SetTransform(actor->GetComponent<TransformComponent>());
 
                 actor->OnCreate();
                 actorCatalog[name] = actor;

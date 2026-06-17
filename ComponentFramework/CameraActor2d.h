@@ -28,6 +28,6 @@ public:
 
 	Matrix4 GetProjectionMatrix() const { return projectionMatrix; }
 
-	Matrix4 GetViewMatrix() const { return MMath::scale(1.0f, 1.0f, 1.0f); }
+	Matrix4 GetViewMatrix() const;
 };
 

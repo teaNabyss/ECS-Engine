@@ -20,7 +20,7 @@ bool MaterialComponent::LoadImage(const char* filename) {
 	if (textureSurface == nullptr) {
 		return false;
 	}
-	int mode = (textureSurface->format == 4) ? GL_RGBA : GL_RGB;
+	int mode = SDL_BYTESPERPIXEL(textureSurface->format) == 4 ? GL_RGBA : GL_RGB;
 	glTexImage2D(GL_TEXTURE_2D, 0, mode, textureSurface->w, textureSurface->h, 0, mode, GL_UNSIGNED_BYTE, textureSurface->pixels);
 	
 	SDL_DestroySurface(textureSurface);

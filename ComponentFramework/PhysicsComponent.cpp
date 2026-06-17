@@ -21,8 +21,25 @@ PhysicsComponent::PhysicsComponent(Component* parent_, float mass_)
 		std::cout << "parent is not an Actor or is null" << std::endl;
 	}
 }
-//here goes Umer Noor's stuff
+
 void PhysicsComponent::Update(float deltaTime) {
+	if (!tc) {
+		Actor* actor = dynamic_cast<Actor*>(parent);
+		if (actor) tc = actor->GetComponent<TransformComponent>();
+	}
+	if (!tc) return;
+
+	vel += acc * deltaTime;
+	tc->Translate(vel * deltaTime + 0.5f * acc * deltaTime * deltaTime);
+}
+
+//here goes Umer Noor's stuff
+void PhysicsComponent::UpdateRolling(float deltaTime) {
+	if (!tc) {
+		Actor* actor = dynamic_cast<Actor*>(parent);
+		if (actor) tc = actor->GetComponent<TransformComponent>();
+	}
+	if (!tc) return;
 	tc->Translate(vel * deltaTime + 0.5f * acc * deltaTime * deltaTime);
 	vel += acc * deltaTime;
 	angularVel += angularAcc * deltaTime;

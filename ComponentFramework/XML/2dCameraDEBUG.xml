@@ -18,9 +18,20 @@
 		
 		<!-- Transform -->
 		<Component name="MikuTransform" type="TransformComponent"
-			px="2.0" py="2.0" pz="0.0"
+			px="15.0" py="5.0" pz="0.0"
+			ow="-1.0" ox="0" oy="0" oz="0"
+			sx="1.0" sy="1.0" sz="1.0"/>
+
+		<Component name="MikuTransform" type="TransformComponent"
+			px="0.0" py="0.0" pz="0.0"
 			ow="1.0" ox="0.0" oy="0" oz="0"
-			sx="1.0" sy="1.0" sz="1.0"/>		
+			sx="1.0" sy="1.0" sz="1.0"/>
+
+
+		<!--  Physics  -->
+		<Component name="MikuPhysics" type="PhysicsComponent"
+			mass="1.0"/>
+
 	</Components>
 
 	<Actors>
@@ -31,10 +42,11 @@
 		
 		<!-- Hatsune Miku -->
 		<Actor name="Miku" type="Actor" actorType="PLANE"
-		mesh = "MikuMesh"
-		material="MikuMaterial"
-		shader="defaultShader"
-		transform="MikuTransform"/>
+			mesh="MikuMesh"
+			material="MikuMaterial"
+			shader="defaultShader"
+			transform="MikuTransform"
+			physics="MikuPhysics"/>
 	</Actors>
 
 </Assets>

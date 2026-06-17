@@ -50,20 +50,30 @@ void Camera2dScene::OnDestroy() {
 }
 void Camera2dScene::HandleEvents(const SDL_Event &sdlEvent) {
 	switch( sdlEvent.type ) {
-    case SDL_EVENT_KEY_DOWN:
+	case SDL_EVENT_KEY_DOWN:
 		switch (sdlEvent.key.scancode) {
-			case SDL_SCANCODE_W:
-				drawInWireMode = !drawInWireMode;
-				break;
-			case SDL_SCANCODE_A:
-				movingLeft = true;
-				break;
-			case SDL_SCANCODE_D:
+		case SDL_SCANCODE_W:
+			drawInWireMode = !drawInWireMode;
+			break;
+		case SDL_SCANCODE_A:
+			movingLeft = true;
+			break;
+		case SDL_SCANCODE_D:
 			movingRight = true;
-				break;
-
+			break;
 		}
 		break;
+
+	case SDL_EVENT_KEY_UP:
+		switch (sdlEvent.key.scancode) {
+		case SDL_SCANCODE_A:
+			movingLeft = false;
+			break;
+		case SDL_SCANCODE_D:
+			movingRight = false;
+			break;
+		}
+	break;
 
 	case SDL_EVENT_MOUSE_MOTION:
 		break;
@@ -96,11 +106,12 @@ void Camera2dScene::Update(const float deltaTime) {
 			}
 
 			physics->Update(deltaTime);
+
+			Ref<TransformComponent> tc = actor->GetComponent<TransformComponent>();
+			camera->Follow(tc->GetPosition());
 		}
 	}
-}
-
-void Camera2dScene::Render() const {
+}void Camera2dScene::Render() const {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -115,7 +126,6 @@ void Camera2dScene::Render() const {
 		Ref<MeshComponent>		mesh = actor->GetComponent<MeshComponent>();
 
 		if (!shader || !transform || !material || !mesh) {
-			std::cout << pair.first << " skipped - missing component\n";
 			continue;
 		}
 		std::cout << pair.first << " rendering\n";
