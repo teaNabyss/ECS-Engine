@@ -5,22 +5,7 @@
 
 PhysicsComponent::PhysicsComponent(Component* parent_, float mass_)
 	: Component(parent_), mass(mass_), vel(), acc(), angularVel(), angularAcc()
-{
-	Actor* actor = dynamic_cast<Actor*>(parent_);
-	if (actor) {
-		tc = actor->GetComponent<TransformComponent>();
-		if (tc) {
-			Vec3 p = tc->GetPosition();
-			std::cout << "tc found, pos: " << p.x << ", " << p.y << ", " << p.z << std::endl;
-		}
-		else {
-			std::cout << "tc is NULL" << std::endl;
-		}
-	}
-	else {
-		std::cout << "parent is not an Actor or is null" << std::endl;
-	}
-}
+{}
 
 void PhysicsComponent::Update(float deltaTime) {
 	if (!tc) {
@@ -75,3 +60,7 @@ void PhysicsComponent::UpdateAngularVel(Vec3 surfaceNormal)
 	float r = tc->GetScale().x;  
 	angularVel = VMath::cross(vel, surfaceNormal) / r;
 }
+
+bool PhysicsComponent::OnCreate() { return true; }
+void PhysicsComponent::OnDestroy() {}
+void PhysicsComponent::Render() const {}

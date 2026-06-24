@@ -42,7 +42,15 @@ bool Camera2dScene::OnCreate() {
 
 	camera = std::dynamic_pointer_cast<CameraActor2d>(assetManager->GetActorCatalog().at("mainCamera"));
 	camera->GetProjectionMatrix().print("projectionMatrix");
+
+	Ref<TransformComponent> tc = actors["Miku"]->GetComponent<TransformComponent>();
+	if (tc) tc->GetModelMatrix().print("Miku modelMatrix");
+	camera->GetViewMatrix().print("viewMatrix");
+
 	return true;
+
+
+
 }
 
 void Camera2dScene::OnDestroy() {
@@ -128,14 +136,17 @@ void Camera2dScene::Update(const float deltaTime) {
 		if (!shader || !transform || !material || !mesh) {
 			continue;
 		}
-		std::cout << pair.first << " rendering\n";
-		
+
 		glUseProgram(shader->GetProgram());
         glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
         glUniformMatrix4fv(shader->GetUniformID("viewMatrix"),       1, GL_FALSE, camera->GetViewMatrix());
         glUniformMatrix4fv(shader->GetUniformID("modelMatrix"),      1, GL_FALSE, transform->GetModelMatrix());
 
+
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material->getTextureID());
+		glUniform1i(shader->GetUniformID("myTexture"), 0);
+
 		mesh->Render();
     }
 }

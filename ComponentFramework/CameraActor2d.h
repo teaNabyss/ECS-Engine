@@ -10,9 +10,14 @@ private:
 
 	Matrix4 ortho;
 	Matrix4 projectionMatrix;
-	SDL_FRect cameraRect;
 	Matrix4 viewMatrix;
 	Vec3 pos;
+
+	float worldSizeX = 120.0f;
+	float worldSizeY = 60.0f;
+
+	float worldWidth;    
+	float worldHeight;
 
 	SDL_Window* sdlWindow;
 

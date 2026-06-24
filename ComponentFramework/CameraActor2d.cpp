@@ -2,7 +2,7 @@
 #include "TransformComponent.h"
 
 CameraActor2d::CameraActor2d(Actor* parent_, SDL_Window* window_, float worldWidth_, float worldHeight_)
-    : Actor(parent_), sdlWindow(window_) {
+    : Actor(parent_), sdlWindow(window_), worldWidth(worldWidth_), worldHeight(worldHeight_) {
     projectionMatrix = MMath::orthographic(0.0f, worldWidth_, 0.0f, worldHeight_, -1.0f, 1.0f);
 }
 
@@ -12,24 +12,51 @@ bool CameraActor2d::OnCreate() {
 	return true;
 }
 
+
+//when the camera moves along with player
+//the view matrix will translate in opposite direction
+//so if the camera moves from (0, 0) to (5, 0)
+//the view matrix will change the world to (-5, 0)
+//this way we create scrolling effect
 Matrix4 CameraActor2d::GetViewMatrix() const {
     Ref<TransformComponent> tc = GetComponent<TransformComponent>();
-    if (!tc) return MMath::scale(1.0f, 1.0f, 1.0f);
+   // if (!tc) return MMath::scale(1.0f, 1.0f, 1.0f);
     Vec3 p = tc->GetPosition();
     return MMath::translate(Vec3(-p.x, -p.y, -p.z));
 }
 
+//sticks to moving object (player), keeping it in center. 
 void CameraActor2d::Follow(const Vec3& targetPos) {
     Ref<TransformComponent> tc = GetComponent<TransformComponent>();
     if (!tc) return;
 
-    cameraRect.x = targetPos.x - (cameraRect.w * 0.5f);
-    cameraRect.y = targetPos.y - (cameraRect.h * 0.5f);
 
-    if (cameraRect.x < 0.0f) cameraRect.x = 0.0f;
-    if (cameraRect.y < 0.0f) cameraRect.y = 0.0f;
+    float halfWidth = worldWidth * 0.5f;
+    float halfHeight = worldHeight * 0.5f;
 
-    tc->SetPosition(Vec3(cameraRect.x, cameraRect.y, 0.0f));
+
+    Vec3 p;
+    p.x = targetPos.x - halfWidth;
+    p.y = targetPos.y - halfHeight;
+
+    std::cout << "Follow: target=(" << targetPos.x << "," << targetPos.y
+        << ") half=(" << halfWidth << "," << halfHeight
+        << ") calc p=(" << p.x << "," << p.y << ")\n";
+
+    std::cout << "worldWidth=" << worldWidth << " worldSizeX=" << worldSizeX
+        << " p.x before clamp=" << p.x << "\n"; 
+
+    // Clamp to world bounds
+    if (p.x < 0.0f) p.x = 0.0f;
+    if (p.y < 0.0f) p.y = 0.0f;
+
+    if (p.x + worldWidth > worldSizeX) p.x = worldSizeX - worldWidth;
+    if (p.y + worldHeight > worldSizeY) p.y = worldSizeY - worldHeight;
+
+
+    std::cout << "p.x after clamp=" << p.x << "\n";
+
+    tc->SetPosition(Vec3(p.x, p.y, 0.0f));
 }
 
 Vec3 CameraActor2d::WorldToScreen(const Vec3& worldPos) const {

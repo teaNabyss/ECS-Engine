@@ -7,5 +7,7 @@ layout(location = 0) out vec4 fragColor;
 uniform sampler2D myTexture;
 
 void main() {
-    fragColor = texture(myTexture, vec2(fragUV.x, 1.0 - fragUV.y));
+
+fragColor = texture(myTexture, vec2(fragUV.x, 1.0 - fragUV.y));
+
 }

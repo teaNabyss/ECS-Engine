@@ -19,10 +19,12 @@ public:
 	void Update(const float deltaTime_);
 	void Render() const;
 
-	void SetPosition(Vec3 pos_) { pos = pos_; }
+	void SetPosition(Vec3 pos_) {pos = pos_;}
+
 	void Translate(Vec3 delta) { pos += delta; }
 
-	Vec3 GetPosition() { return pos; }
+	Vec3 GetPosition() {return pos;}
+
 	Vec3 GetScale() { return scale; }
 	Quaternion GetQuaternion() { return orientation; }
 	Matrix4 GetTransformMatrix() const;

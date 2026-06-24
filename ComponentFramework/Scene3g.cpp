@@ -157,6 +157,3 @@ void Scene3g::Render() const {
 
 
 
-bool PhysicsComponent::OnCreate() { return true; }
-void PhysicsComponent::OnDestroy() {}
-void PhysicsComponent::Render() const {}

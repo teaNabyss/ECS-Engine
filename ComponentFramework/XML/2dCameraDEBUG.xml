@@ -7,7 +7,7 @@
 		<Component name="defaultShader" type="ShaderComponent"
             vert="shaders/defaultVert2d.glsl"
             frag="shaders/defaultFrag2d.glsl"/>
-		dont send window do
+
 		<!-- Materials -->
 		<Component name="MikuMaterial" type="MaterialComponent"
             texture="textures/MikuPic.png"/>
@@ -18,16 +18,15 @@
 		
 		<!-- Transform -->
 		<Component name="MikuTransform" type="TransformComponent"
-			px="15.0" py="5.0" pz="0.0"
-			ow="-1.0" ox="0" oy="0" oz="0"
+			px="5.0" py="4.5" pz="0.0"
+			ow="1.0" ox="0" oy="0" oz="0"
+			sx="1.0" sy="1.0" sz="0.5"/>
+
+		<Component name="CameraTransform" type="TransformComponent"
+			px="15.0" py="7.5" pz="0.0"
+			ow="1.0" ox="0.0" oy="0.0" oz="0.0"
 			sx="1.0" sy="1.0" sz="1.0"/>
-
-		<Component name="MikuTransform" type="TransformComponent"
-			px="0.0" py="0.0" pz="0.0"
-			ow="1.0" ox="0.0" oy="0" oz="0"
-			sx="1.0" sy="1.0" sz="1.0"/>
-
-
+		
 		<!--  Physics  -->
 		<Component name="MikuPhysics" type="PhysicsComponent"
 			mass="1.0"/>
@@ -36,9 +35,9 @@
 
 	<Actors>
 
-		<!-- Camera -->
 		<Actor name="mainCamera" type="CameraActor2d"
-              worldWidth="30.0" worldHeight="15.0"/>
+			worldWidth="30.0" worldHeight="15.0"
+			transform="CameraTransform"/>
 		
 		<!-- Hatsune Miku -->
 		<Actor name="Miku" type="Actor" actorType="PLANE"

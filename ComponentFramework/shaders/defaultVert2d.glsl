@@ -13,5 +13,6 @@ layout(location = 0) out vec2 fragUV;
 
 void main() {
     fragUV = inUVCoord;
+
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(inVertex, 1.0);
 }
