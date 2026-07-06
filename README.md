@@ -15,8 +15,9 @@ SDL3 — window management and event handling
 Engine
 - AssetManager — XML manifest reader, builds component & actor catalogs
 - Actor — base game object, holds components
-- CameraActor — projection/view matrices, skybox rendering
+- CameraActor 3d — projection/view matrices, skybox rendering
 --SkyBox — cubemap texture, skybox draw
+- CameraActor 2d (*Work in progress*) - basic 2d camera, with sticking to player (centered) logic. 
 - Components
 -- TransformComponent   — position, rotation, scale + parent inheritance
 -- MeshComponent        — geometry loading and rendering
@@ -24,4 +25,4 @@ Engine
 -- MaterialComponent    — texture binding
 -- PhysicsComponent     — mass and physics data
 --- CollisionComponent   — sphere / AABB / plane collision shapes
-- Scene5 — currently active scene, update and render 
+- Camera2dScene — currently active scene
