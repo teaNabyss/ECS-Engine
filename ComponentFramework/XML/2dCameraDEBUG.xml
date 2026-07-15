@@ -9,14 +9,25 @@
             frag="shaders/defaultFrag2d.glsl"/>
 
 		<!-- Materials -->
+		<Component name="BackMaterial" type="MaterialComponent"
+			texture="textures/205028.png"/>
+
 		<Component name="MikuMaterial" type="MaterialComponent"
             texture="textures/MikuPic.png"/>
-		
+
 		<!--  Meshes  -->
+		<Component name="BackMesh" type="MeshComponent"
+			mesh="meshes/Plane.obj"/>
+
 		<Component name="MikuMesh" type="MeshComponent"
 			mesh="meshes/Plane.obj"/>
-		
+
 		<!-- Transform -->
+		<Component name="BackTransform" type="TransformComponent"
+			px="14.0" py="0.0" pz="-0.9"
+			ow="1.0" ox="0" oy="0" oz="0"
+			sx="2.0" sy="2.0" sz="0.5"/>
+
 		<Component name="MikuTransform" type="TransformComponent"
 			px="5.0" py="4.5" pz="0.0"
 			ow="1.0" ox="0" oy="0" oz="0"
@@ -26,7 +37,7 @@
 			px="15.0" py="7.5" pz="0.0"
 			ow="1.0" ox="0.0" oy="0.0" oz="0.0"
 			sx="1.0" sy="1.0" sz="1.0"/>
-		
+
 		<!--  Physics  -->
 		<Component name="MikuPhysics" type="PhysicsComponent"
 			mass="1.0"/>
@@ -38,14 +49,21 @@
 		<Actor name="mainCamera" type="CameraActor2d"
 			worldWidth="30.0" worldHeight="15.0"
 			transform="CameraTransform"/>
-		
+
+		<Actor name="Back" type="Actor" actorType="PLANE"
+			mesh="BackMesh"
+			material="BackMaterial"
+			shader="defaultShader"
+			transform="BackTransform"/>
+
 		<!-- Hatsune Miku -->
-		<Actor name="Miku" type="Actor" actorType="PLANE"
+		<Actor name="Miku" type="Actor" actorType="PLAYER"
 			mesh="MikuMesh"
 			material="MikuMaterial"
 			shader="defaultShader"
 			transform="MikuTransform"
 			physics="MikuPhysics"/>
+
 	</Actors>
 
 </Assets>

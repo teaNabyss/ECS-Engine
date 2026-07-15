@@ -99,7 +99,7 @@ void Camera2dScene::HandleEvents(const SDL_Event &sdlEvent) {
 void Camera2dScene::Update(const float deltaTime) {
 	for (auto& pair : actors) {
 		Ref<Actor> actor = pair.second;
-		if (actor->GetType() == ActorType::PLANE) {
+		if (actor->GetType() == ActorType::PLAYER) {
 			Ref<PhysicsComponent> physics = actor->GetComponent<PhysicsComponent>();
 			if (!physics) continue;
 

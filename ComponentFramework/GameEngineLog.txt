@@ -1,4 +1,4 @@
-Tue Jun 23 20:29:11 2026
+Tue Jul 14 19:28:15 2026
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 32.0.101.8247
 [INFO]: Graphics card vendor Intel
@@ -12,3 +12,4 @@ Tue Jun 23 20:29:11 2026
 "viewMatrix" loc:1
 "myTexture" loc:3
 
+[INFO]: Loading assets for Actor: 

@@ -135,6 +135,7 @@ void AssetManager::ReadManifest() {
          if (!t)                      return ActorType::BOX;
          if (strcmp(t, "SPHERE") == 0) return ActorType::SPHERE;
          if (strcmp(t, "PLANE") == 0) return ActorType::PLANE;
+         if (strcmp(t, "PLAYER") == 0) return ActorType::PLAYER;
          if (strcmp(t, "LIGHT") == 0) return ActorType::LIGHT;
         return ActorType::BOX;
     }

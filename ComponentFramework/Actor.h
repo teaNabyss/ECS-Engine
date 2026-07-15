@@ -11,6 +11,7 @@ enum class ActorType {
 	SPHERE,
 	BOX,
 	PLANE,
+	PLAYER,
 	LIGHT
 };
 
