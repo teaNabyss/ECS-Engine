@@ -15,11 +15,11 @@
 
 Scene3g::Scene3g() :
 	drawInWireMode{ false }, camera{nullptr} {
-	Debug::Info("Created Scene2: ", __FILE__, __LINE__);
+	Debug::Info("Created Scene3: ", __FILE__, __LINE__);
 }
 
 Scene3g::~Scene3g() {
-	Debug::Info("Deleted Scene2: ", __FILE__, __LINE__);
+	Debug::Info("Deleted Scene3: ", __FILE__, __LINE__);
 }
 
 bool Scene3g::OnCreate() {
@@ -52,7 +52,7 @@ bool Scene3g::OnCreate() {
 	sphere->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	sphere->AddComponent<TransformComponent>(nullptr, Vec3( -1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
 	sphere->AddComponent<MaterialComponent>(nullptr, "textures/carpet.jpg");
-	sphere->AddComponent<CollisionComponent>(nullptr, 0.3f);
+	sphere->AddComponent<CollisionComponent>(sphere.get(), 0.3f);
 
 	std::cout << "Adding PhysicsComponent to sphere" << std::endl;
 	sphere->AddComponent<PhysicsComponent>(sphere.get(), 1.0f);
@@ -70,7 +70,7 @@ bool Scene3g::OnCreate() {
 	sphere2->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	sphere2->AddComponent<TransformComponent>(nullptr, Vec3(1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
 	sphere2->AddComponent<MaterialComponent>(nullptr, "textures/evilEye.jpg");
-	sphere2->AddComponent<CollisionComponent>(nullptr, 0.3f);
+	sphere2->AddComponent<CollisionComponent>(sphere2.get(), 0.3f);
 
 	std::cout << "Adding PhysicsComponent to sphere2" << std::endl;
 	sphere2->AddComponent<PhysicsComponent>(sphere2.get(), 1.0f);

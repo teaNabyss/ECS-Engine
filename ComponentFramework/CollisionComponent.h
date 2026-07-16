@@ -39,7 +39,13 @@ class CollisionComponent : public Component {
 		void Update(const float deltaTime_) {}
 		void Render()const {}
 
-		Vec3 GetPosition();
+		//this is not a position of an object in world
+		//which stores Transform component
+		//this is a position of collider 
+		// for example: in sphere collider position is in center, 
+		// but position of an actor that has sphere collider (character)
+		// may be at their feet
+		Vec3 GetPosition(); 
 		float GetRadius() { return radius; }
 };
 

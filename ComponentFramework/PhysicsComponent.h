@@ -7,7 +7,7 @@
 using namespace MATH;
 
 class PhysicsComponent : public Component {
-    friend class CollisionSystem;
+
 private:
     Vec3  vel;
     Vec3 angularVel;
@@ -23,6 +23,7 @@ public:
     void SetVelocity(Vec3 vel_) { vel = vel_; }
     Vec3 GetVelocity() { return vel; };
     void SetTransform(Ref<TransformComponent> tc_) { tc = tc_; }
+    float GetMass() { return mass; }
     void Update(float deltaTime);
     void UpdateRolling(float deltaTime);
     void ApplyTorque(Vec3 torque);

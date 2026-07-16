@@ -70,7 +70,7 @@ void PhysicsComponent::UpdateAngularVel(Vec3 surfaceNormal)
 	if (!cc) return; 
 	float r = cc->GetRadius();
 
-	angularVel = VMath::cross(vel, surfaceNormal) / r;
+	angularVel = VMath::cross(surfaceNormal, vel) / r;
 }
 
 bool PhysicsComponent::OnCreate() { return true; }

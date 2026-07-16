@@ -1,15 +1,31 @@
-Tue Jul 14 19:28:15 2026
+Thu Jul 16 19:10:15 2026
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 32.0.101.8247
 [INFO]: Graphics card vendor Intel
 [INFO]: Graphics card name Intel(R) Arc(TM) Graphics
 [INFO]: GLSL Version 4.60 - Build 32.0.101.8247
-[INFO]: Created Camera2dScene: 
+[INFO]: Created Scene3: 
 [INFO]: Loading assets for Actor: 
 [INFO]: Uniforms:
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
+"lightPos" loc:2
+"modelMatrix" loc:0
+"projectionMatrix" loc:3
 "viewMatrix" loc:1
-"myTexture" loc:3
+"myTexture" loc:4
 
 [INFO]: Loading assets for Actor: 
+[INFO]: Uniforms:
+"lightPos" loc:2
+"modelMatrix" loc:0
+"projectionMatrix" loc:3
+"viewMatrix" loc:1
+"myTexture" loc:4
+
+[INFO]: Loading assets for Actor: 
+[INFO]: Uniforms:
+"lightPos" loc:2
+"modelMatrix" loc:0
+"projectionMatrix" loc:3
+"viewMatrix" loc:1
+"myTexture" loc:4
+

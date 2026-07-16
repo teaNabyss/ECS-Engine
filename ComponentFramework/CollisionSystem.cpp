@@ -13,17 +13,17 @@ void CollisionSystem::TwoSpheresResponse(Vec3 pos1, Ref<PhysicsComponent> pc1, V
     float e = 1.0f;
     Vec3 n = VMath::normalize(pos1 - pos2);
 
-    float v1p = VMath::dot(pc1->vel, n);
-    float v2p = VMath::dot(pc2->vel, n);
+    float v1p = VMath::dot(pc1->GetVelocity(), n);
+    float v2p = VMath::dot(pc2->GetVelocity(), n);
 
     if (v1p - v2p > 0.0f) return;
 
-    float m1 = pc1->mass, m2 = pc2->mass;
+    float m1 = pc1->GetMass(), m2 = pc2->GetMass();
     float v1p_new = (((m1 - e * m2) * v1p) + ((1.0f + e) * m2 * v2p)) / (m1 + m2);
     float v2p_new = (((m2 - e * m1) * v2p) + ((1.0f + e) * m1 * v1p)) / (m1 + m2);
 
-    pc1->vel = pc1->vel + (v1p_new - v1p) * n;
-    pc2->vel = pc2->vel + (v2p_new - v2p) * n;
+    pc1->SetVelocity(pc1->GetVelocity() + (v1p_new - v1p) * n);
+    pc2->SetVelocity(pc2->GetVelocity() + (v2p_new - v2p) * n);
 
     // torque from collision impulse
     Vec3 impulse = (v1p_new - v1p) * n;
@@ -35,11 +35,18 @@ void CollisionSystem::TwoSpheresResponse(Vec3 pos1, Ref<PhysicsComponent> pc1, V
 void CollisionSystem::Update(float deltaTime) {
     std::cout << "Update called, actor count: " << collidingActors.size() << std::endl;
 
+    //for (auto& actor : collidingActors) {
+    //    Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
+    //    std::cout << "pc: " << (pc ? "found" : "NULL") << std::endl;
+    //    pc->Update(deltaTime);
+    //    pc->UpdateRolling(deltaTime);
+    //}
+
     for (auto& actor : collidingActors) {
         Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
-        std::cout << "pc: " << (pc ? "found" : "NULL") << std::endl;
-        pc->Update(deltaTime);
-        pc->UpdateAngularVel(Vec3(0.0f, 1.0f, 0.0f));
+        pc->Update(deltaTime);                          // translation only
+        pc->UpdateAngularVel(Vec3(0.0f, 1.0f, 0.0f));    // sets angularVel kinematically
+        pc->UpdateOrientation(deltaTime);                 // actually rotates the transform
     }
 
     //loop through pairs of actors 
