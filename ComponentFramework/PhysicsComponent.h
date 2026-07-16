@@ -1,5 +1,6 @@
 #pragma once
 #include "TransformComponent.h"
+#include "CollisionComponent.h"
 #include "Component.h"
 #include "Actor.h"
 
@@ -15,6 +16,7 @@ private:
     float mass;
     float rotationalInertia;
     Ref <TransformComponent> tc;
+    Ref<CollisionComponent> cc;
 
 public:
     PhysicsComponent(Component* parent_, float mass_);

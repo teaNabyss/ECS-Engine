@@ -47,10 +47,14 @@ void CollisionSystem::Update(float deltaTime) {
         for (int j = i + 1; j < collidingActors.size(); j++) {
             //store components in pc and cc accordingly
             std::cout << "checking pair " << i << " vs " << j << std::endl;
-            Vec3 pos1 = collidingActors[i]->GetComponent<PhysicsComponent>()->tc->GetPosition();
-            Vec3 pos2 = collidingActors[j]->GetComponent<PhysicsComponent>()->tc->GetPosition();
-            float r1 = collidingActors[i]->GetComponent<CollisionComponent>()->radius;
-            float r2 = collidingActors[j]->GetComponent<CollisionComponent>()->radius;
+            Ref<CollisionComponent> cc1 = collidingActors[i]->GetComponent<CollisionComponent>();
+            Ref<CollisionComponent> cc2 = collidingActors[j]->GetComponent<CollisionComponent>();
+
+            Vec3 pos1 = cc1->GetPosition();
+            Vec3 pos2 = cc2->GetPosition();
+            float r1 = cc1->GetRadius();
+            float r2 = cc2->GetRadius();
+
             float dist = VMath::mag(pos1 - pos2);
 
             std::cout << "dist: " << dist << " r1+r2: " << r1 + r2 << std::endl;

@@ -33,7 +33,13 @@ void PhysicsComponent::UpdateRolling(float deltaTime) {
 
 void PhysicsComponent::ApplyTorque(Vec3 torque)
 {
-	float r = tc->GetScale().x;
+	if (!cc) {
+		Actor* actor = dynamic_cast<Actor*>(parent);
+		if (actor) cc = actor->GetComponent<CollisionComponent>();
+	}
+	if (!cc) return; // no collider, nothing to roll against
+	float r = cc->GetRadius();
+
 	rotationalInertia = (2.0f / 5.0f) * mass * r * r;
 
 	if (fabs(rotationalInertia) > VERY_SMALL) {
@@ -57,7 +63,13 @@ void PhysicsComponent::UpdateOrientation(float deltaTime)
 
 void PhysicsComponent::UpdateAngularVel(Vec3 surfaceNormal)
 {
-	float r = tc->GetScale().x;  
+	if (!cc) {
+		Actor* actor = dynamic_cast<Actor*>(parent);
+		if (actor) cc = actor->GetComponent<CollisionComponent>();
+	}
+	if (!cc) return; 
+	float r = cc->GetRadius();
+
 	angularVel = VMath::cross(vel, surfaceNormal) / r;
 }
 

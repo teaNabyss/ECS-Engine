@@ -1,9 +1,19 @@
 #include "CollisionComponent.h"
 
-CollisionComponent::CollisionComponent(Component* parent_, float radius_)
-    : Component(parent_), radius(radius_)
-{}
 
+Vec3 CollisionComponent::GetPosition() {
+    if (!tc) {
+        Actor* actor = dynamic_cast<Actor*>(parent);
+        if (actor) tc = actor->GetComponent<TransformComponent>();
+    }
+    return tc ? tc->GetPosition() : Vec3();
+}
+
+
+CollisionComponent::CollisionComponent(Component* parent_, float radius_)
+    : Component(parent_), collidertype(ColliderType::SPHERE), radius(radius_)
+{
+}
 CollisionComponent::CollisionComponent(Component* parent_, MATHEX::Plane plane_)
     : Component(parent_), collidertype(ColliderType::PLANE), plane(plane_)
 {}

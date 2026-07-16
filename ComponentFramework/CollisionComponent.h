@@ -1,6 +1,9 @@
 #pragma once
 #include "Component.h"
 #include "Plane.h"
+#include "Actor.h"
+#include "TransformComponent.h"
+
 using namespace MATH;
 
 enum class ColliderType {
@@ -25,6 +28,7 @@ class CollisionComponent : public Component {
 			float radius;
 			MATHEX::Plane plane;
 			AABB aabb;
+			Ref<TransformComponent> tc;
 
 	public:
 		CollisionComponent(Component* parent_, float radius_);
@@ -34,5 +38,8 @@ class CollisionComponent : public Component {
 		void OnDestroy() {}
 		void Update(const float deltaTime_) {}
 		void Render()const {}
+
+		Vec3 GetPosition();
+		float GetRadius() { return radius; }
 };
 
