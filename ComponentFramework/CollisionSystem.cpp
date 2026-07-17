@@ -1,4 +1,5 @@
 #include "CollisionSystem.h"
+#include <iomanip>
 
 bool CollisionSystem::TwoSpheresDetection(Vec3 pos1, float r1, Vec3 pos2, float r2) {
     Vec3 L = pos1 - pos2;
@@ -33,7 +34,6 @@ void CollisionSystem::TwoSpheresResponse(Vec3 pos1, Ref<PhysicsComponent> pc1, V
 
 
 void CollisionSystem::Update(float deltaTime) {
-    std::cout << "Update called, actor count: " << collidingActors.size() << std::endl;
 
     //for (auto& actor : collidingActors) {
     //    Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
@@ -42,18 +42,49 @@ void CollisionSystem::Update(float deltaTime) {
     //    pc->UpdateRolling(deltaTime);
     //}
 
+    //for (auto& actor : collidingActors) {
+    //    Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
+    //    pc->Update(deltaTime);                          // translation only
+    //    pc->UpdateAngularVel(Vec3(0.0f, 1.0f, 0.0f));    // sets angularVel kinematically
+    //    pc->UpdateOrientation(deltaTime);                 // actually rotates the transform
+    //}
+
+// Pass 1: integrate, branching on LAST frame's grounded state
     for (auto& actor : collidingActors) {
         Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
-        pc->Update(deltaTime);                          // translation only
-        pc->UpdateAngularVel(Vec3(0.0f, 1.0f, 0.0f));    // sets angularVel kinematically
-        pc->UpdateOrientation(deltaTime);                 // actually rotates the transform
+
+        if (pc->IsGrounded()) {
+            pc->Update(deltaTime);                          // translation only
+            pc->UpdateAngularVel(pc->GetGroundNormal());     // kinematic overwrite
+            pc->UpdateOrientation(deltaTime);
+        }
+        else {
+            pc->UpdateRolling(deltaTime);                    // translation + torque-driven spin
+        }
     }
 
+    // Pass 2: detect against ground, refresh isGrounded + normal for NEXT frame
+    for (auto& actor : collidingActors) {
+        Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
+        Ref<CollisionComponent> cc = actor->GetComponent<CollisionComponent>();
+
+        for (auto& groundActor : groundActors) {
+            Ref<CollisionComponent> groundCC = groundActor->GetComponent<CollisionComponent>();
+
+            if (SpherePlaneDetection(cc, groundCC)) {
+                pc->SetGrounded(true);
+                pc->SetGroundNormal(groundCC->plane.n);
+                SpherePlaneResponse(cc, pc, groundCC);
+            }
+            else {
+                pc->SetGrounded(false);
+            }
+        }
+    }
     //loop through pairs of actors 
     for (int i = 0; i < collidingActors.size(); i++) {
         for (int j = i + 1; j < collidingActors.size(); j++) {
             //store components in pc and cc accordingly
-            std::cout << "checking pair " << i << " vs " << j << std::endl;
             Ref<CollisionComponent> cc1 = collidingActors[i]->GetComponent<CollisionComponent>();
             Ref<CollisionComponent> cc2 = collidingActors[j]->GetComponent<CollisionComponent>();
 
@@ -64,7 +95,6 @@ void CollisionSystem::Update(float deltaTime) {
 
             float dist = VMath::mag(pos1 - pos2);
 
-            std::cout << "dist: " << dist << " r1+r2: " << r1 + r2 << std::endl;
 
             Ref<PhysicsComponent> pc1 = collidingActors[i]->GetComponent<PhysicsComponent>();
             Ref<PhysicsComponent> pc2 = collidingActors[j]->GetComponent<PhysicsComponent>();
@@ -76,4 +106,42 @@ void CollisionSystem::Update(float deltaTime) {
             }
         }
     }
+}
+
+
+bool CollisionSystem::SpherePlaneDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b) {
+
+    // this is to avoid a specific order of references pass
+    Ref<CollisionComponent> sphere;
+    Ref<CollisionComponent> plane;
+
+    if (a->collidertype == ColliderType::SPHERE && b->collidertype == ColliderType::PLANE) {
+        sphere = a;
+        plane = b;
+    }
+    else if (b->collidertype == ColliderType::SPHERE && a->collidertype == ColliderType::PLANE) {
+        sphere = b;
+        plane = a;
+    }
+    else {
+        return false; // not a sphere-plane pair
+    }
+
+    // here is the actual math 
+    float distance = VMath::dot(plane->plane.n, sphere->GetPosition()) + plane->plane.d;
+    const float epsilon = 0.001f; // small tolerance for floating-point imprecision
+    return fabs(distance) <= sphere->GetRadius() + epsilon;
+}
+void CollisionSystem::SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> planeCC) {
+    float e = 1.0f;
+    Vec3 n = planeCC->plane.n;
+    Vec3 v = spherePC->GetVelocity();
+
+    float vDotN = VMath::dot(v, n);
+
+    // only respond if the sphere is moving into the plane
+    if (vDotN >= VERY_SMALL) return;
+
+    Vec3 v_new = v - (1.0f + e) * vDotN * n;
+    spherePC->SetVelocity(v_new);
 }

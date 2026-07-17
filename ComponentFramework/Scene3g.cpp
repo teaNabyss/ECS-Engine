@@ -30,20 +30,24 @@ bool Scene3g::OnCreate() {
 	lightPos = Vec3(3.0f, 0.0f, 0.0f);
 
 
-	Ref<Actor> thing = std::make_shared<Actor>(nullptr);
+	Ref<Actor> ground = std::make_shared<Actor>(nullptr);
 
-	//I made types of objects insted of creating inner vector. It's called tags I thiink, but I prefer word "types" here
-	thing->SetType(ActorType::PLANE);
-	actors["thing"] = thing;
+	//I made types of objects instead of creating inner vector. It's called tags I thiink, but I prefer word "types" here
+	ground->SetType(ActorType::PLANE);
+	actors["ground"] = ground;
 
-	thing->AddComponent<MeshComponent>(nullptr, "meshes/Plane.obj");
-	thing->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
-	thing->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, -1.0f, -0.5f), QMath::angleAxisRotation(-90.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.4f, 0.4f, 0.4f));
-	thing->AddComponent<MaterialComponent>(nullptr, "textures/background.jpg");
-	thing->OnCreate();
-	thing->ListComponents();
+	ground->AddComponent<MeshComponent>(nullptr, "meshes/Plane.obj");
+	ground->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
+	ground->AddComponent<TransformComponent>(nullptr, Vec3(0.0f, -1.0f, -0.5f), QMath::angleAxisRotation(-90.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.4f, 0.4f, 0.4f));
+	ground->AddComponent<MaterialComponent>(nullptr, "textures/background.jpg");
 
-	//for (int i = 0; i < 3; i++) {
+	Ref<TransformComponent> groundTC = ground->GetComponent<TransformComponent>();
+	Vec3 groundNormal = QMath::rotate(Vec3(0.0f, 0.0f, 1.0f), groundTC->GetQuaternion());
+	float d = -VMath::dot(groundNormal, groundTC->GetPosition());
+	ground->AddComponent<CollisionComponent>(ground.get(), MATHEX::Plane(groundNormal, d));	ground->OnCreate();
+
+	ground->ListComponents();
+	collisionSystem.AddGround(actors["ground"]);
 
 	Ref<Actor> sphere = std::make_shared<Actor>(nullptr);
 	sphere->SetType(ActorType::SPHERE);
@@ -53,11 +57,7 @@ bool Scene3g::OnCreate() {
 	sphere->AddComponent<TransformComponent>(nullptr, Vec3( -1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
 	sphere->AddComponent<MaterialComponent>(nullptr, "textures/carpet.jpg");
 	sphere->AddComponent<CollisionComponent>(sphere.get(), 0.3f);
-
-	std::cout << "Adding PhysicsComponent to sphere" << std::endl;
 	sphere->AddComponent<PhysicsComponent>(sphere.get(), 1.0f);
-	std::cout << "Done adding PhysicsComponent" << std::endl;
-
 	sphere->OnCreate();
 	sphere->ListComponents();
 	collisionSystem.AddActor(actors["sphere"]);
@@ -71,15 +71,10 @@ bool Scene3g::OnCreate() {
 	sphere2->AddComponent<TransformComponent>(nullptr, Vec3(1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
 	sphere2->AddComponent<MaterialComponent>(nullptr, "textures/evilEye.jpg");
 	sphere2->AddComponent<CollisionComponent>(sphere2.get(), 0.3f);
-
-	std::cout << "Adding PhysicsComponent to sphere2" << std::endl;
 	sphere2->AddComponent<PhysicsComponent>(sphere2.get(), 1.0f);
-	std::cout << "Done adding PhysicsComponent" << std::endl;
-
 	sphere2->OnCreate();
 	sphere2->ListComponents();
 	collisionSystem.AddActor(actors["sphere2"]);
-	//}
 
 	return true;
 }
