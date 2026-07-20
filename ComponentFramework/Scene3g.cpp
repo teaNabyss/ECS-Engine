@@ -55,14 +55,14 @@ bool Scene3g::OnCreate() {
 	sphere->AddComponent<MeshComponent>(nullptr, "meshes/Sphere.obj");
 	sphere->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
 	sphere->AddComponent<TransformComponent>(nullptr, Vec3( -1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
-	sphere->AddComponent<MaterialComponent>(nullptr, "textures/carpet.jpg");
+	sphere->AddComponent<MaterialComponent>(nullptr, "textures/evilEye.jpg ");
 	sphere->AddComponent<CollisionComponent>(sphere.get(), 0.3f);
 	sphere->AddComponent<PhysicsComponent>(sphere.get(), 1.0f);
 	sphere->OnCreate();
 	sphere->ListComponents();
 	collisionSystem.AddActor(actors["sphere"]);
 
-
+	/*
 	Ref<Actor> sphere2 = std::make_shared<Actor>(nullptr);
 	sphere2->SetType(ActorType::SPHERE);
 	actors["sphere2"] = sphere2;
@@ -75,6 +75,21 @@ bool Scene3g::OnCreate() {
 	sphere2->OnCreate();
 	sphere2->ListComponents();
 	collisionSystem.AddActor(actors["sphere2"]);
+	*/
+
+	Ref<Actor> box = std::make_shared<Actor>(nullptr);
+	box->SetType(ActorType::BOX);
+	actors["box"] = box;
+	box->AddComponent<MeshComponent>(nullptr, "meshes/Cube.obj");
+	box->AddComponent<ShaderComponent>(nullptr, "shaders/texturePhongVert.glsl", "shaders/texturePhongFrag.glsl");
+	box->AddComponent<TransformComponent>(nullptr, Vec3(1.0f, -0.7f, -0.2f), QMath::angleAxisRotation(0.0f, Vec3(1.0f, 0.0f, 0.0f)), Vec3(0.3f, 0.3f, 0.3f));
+	box->AddComponent<MaterialComponent>(nullptr, "textures/8x8_checkered_board.png");
+	box->AddComponent<CollisionComponent>(box.get(), AABB{ Vec3(1.0f, -0.7f, -0.2f), Vec3(0.3f, 0.3f, 0.3f) });
+	box->AddComponent<PhysicsComponent>(box.get(), 1.0f);
+	box->OnCreate();
+	box->ListComponents();
+	collisionSystem.AddActor(actors["box"]);
+
 
 	return true;
 }
@@ -90,9 +105,8 @@ void Scene3g::HandleEvents(const SDL_Event &sdlEvent) {
 				drawInWireMode = !drawInWireMode;
 				break;
 			case SDL_SCANCODE_SPACE:
-				spining = true;
 				actors["sphere"]->GetComponent<PhysicsComponent>()->SetVelocity(Vec3(1.0f, 0.0f, 0.0f));
-				actors["sphere2"]->GetComponent<PhysicsComponent>()->SetVelocity(Vec3(-1.0f, 0.0f, 0.0f));
+				//actors["sphere2"]->GetComponent<PhysicsComponent>()->SetVelocity(Vec3(-1.0f, 0.0f, 0.0f));
 
 				break;
 		}
@@ -123,9 +137,20 @@ void Scene3g::Update(const float deltaTime) {
 		}
 	}*/
 
-	collisionSystem.Update(deltaTime);
+	//collisionSystem.Update(deltaTime);
 
 
+	actors["sphere"]->GetComponent<PhysicsComponent>()->Update(deltaTime);
+
+	Ref<CollisionComponent> sphereCC = actors["sphere"]->GetComponent<CollisionComponent>();
+	Ref<CollisionComponent> boxCC = actors["box"]->GetComponent<CollisionComponent>();
+
+	if (collisionSystem.SphereAABBDetection(sphereCC, boxCC)) {
+		std::cout << "Sphere-AABB collision detected!" << std::endl;
+	}
+	else {
+		std::cout << "no collision" << std::endl;
+	}
 }
 
 void Scene3g::Render() const {

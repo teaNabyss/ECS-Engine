@@ -35,20 +35,6 @@ void CollisionSystem::TwoSpheresResponse(Vec3 pos1, Ref<PhysicsComponent> pc1, V
 
 void CollisionSystem::Update(float deltaTime) {
 
-    //for (auto& actor : collidingActors) {
-    //    Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
-    //    std::cout << "pc: " << (pc ? "found" : "NULL") << std::endl;
-    //    pc->Update(deltaTime);
-    //    pc->UpdateRolling(deltaTime);
-    //}
-
-    //for (auto& actor : collidingActors) {
-    //    Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
-    //    pc->Update(deltaTime);                          // translation only
-    //    pc->UpdateAngularVel(Vec3(0.0f, 1.0f, 0.0f));    // sets angularVel kinematically
-    //    pc->UpdateOrientation(deltaTime);                 // actually rotates the transform
-    //}
-
 // Pass 1: integrate, branching on LAST frame's grounded state
     for (auto& actor : collidingActors) {
         Ref<PhysicsComponent> pc = actor->GetComponent<PhysicsComponent>();
@@ -144,4 +130,42 @@ void CollisionSystem::SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<
 
     Vec3 v_new = v - (1.0f + e) * vDotN * n;
     spherePC->SetVelocity(v_new);
+}
+
+bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b) {
+    Ref<CollisionComponent> sphere;
+    Ref<CollisionComponent> box;
+
+    if (a->collidertype == ColliderType::SPHERE && b->collidertype == ColliderType::AABB) {
+        sphere = a;
+        box = b;
+    }
+    else if (b->collidertype == ColliderType::SPHERE && a->collidertype == ColliderType::AABB) {
+        sphere = b;
+        box = a;
+    }
+    else {
+        return false;
+    }
+
+    Vec3 sphereCenter = sphere->GetPosition();
+    Vec3 boxCenter = box->aabb.center;
+    Vec3 boxHalf = box->aabb.half;
+
+    Vec3 boxMin = boxCenter - boxHalf;
+    Vec3 boxMax = boxCenter + boxHalf;
+
+    // Clamp sphere center to box bounds, per axis, to find the closest point on the box
+    Vec3 closest;
+    closest.x = std::max(boxMin.x, std::min(sphereCenter.x, boxMax.x));
+    closest.y = std::max(boxMin.y, std::min(sphereCenter.y, boxMax.y));
+    closest.z = std::max(boxMin.z, std::min(sphereCenter.z, boxMax.z));
+
+    Vec3 diff = sphereCenter - closest;
+    float distSq = VMath::dot(diff, diff);
+
+    const float epsilon = 0.001f; // same reasoning as SpherePlaneDetection
+    float r = sphere->GetRadius() + epsilon;
+
+    return distSq <= (r * r); //a bit more efficient 
 }
