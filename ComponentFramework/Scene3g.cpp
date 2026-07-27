@@ -144,9 +144,11 @@ void Scene3g::Update(const float deltaTime) {
 
 	Ref<CollisionComponent> sphereCC = actors["sphere"]->GetComponent<CollisionComponent>();
 	Ref<CollisionComponent> boxCC = actors["box"]->GetComponent<CollisionComponent>();
+	Ref<PhysicsComponent> spherePC = actors["sphere"]->GetComponent<PhysicsComponent>();
 
 	if (collisionSystem.SphereAABBDetection(sphereCC, boxCC)) {
 		std::cout << "Sphere-AABB collision detected!" << std::endl;
+		collisionSystem.SphereAABBResponse(sphereCC, spherePC, boxCC);
 	}
 	else {
 		std::cout << "no collision" << std::endl;

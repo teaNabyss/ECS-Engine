@@ -169,3 +169,33 @@ bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, cons
 
     return distSq <= (r * r); //a bit more efficient 
 }
+
+void CollisionSystem::SphereAABBResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> boxCC) {
+    Vec3 sphereCenter = sphereCC->GetPosition();
+    Vec3 boxCenter = boxCC->aabb.center;
+    Vec3 boxHalf = boxCC->aabb.half;
+
+    Vec3 boxMin = boxCenter - boxHalf;
+    Vec3 boxMax = boxCenter + boxHalf;
+
+    Vec3 closest;
+    closest.x = std::max(boxMin.x, std::min(sphereCenter.x, boxMax.x));
+    closest.y = std::max(boxMin.y, std::min(sphereCenter.y, boxMax.y));
+    closest.z = std::max(boxMin.z, std::min(sphereCenter.z, boxMax.z));
+
+    Vec3 diff = sphereCenter - closest;
+    float dist = VMath::mag(diff);
+
+    if (dist < VERY_SMALL) return; // sphere center is exactly on the surface/inside — no clear direction, bail for now
+
+    Vec3 n = diff / dist; // normalized direction from box surface to sphere center
+
+    float e = 1.0f;
+    Vec3 v = spherePC->GetVelocity();
+    float vDotN = VMath::dot(v, n);
+
+    if (vDotN >= 0.0f) return; // already moving away
+
+    Vec3 v_new = v - (1.0f + e) * vDotN * n;
+    spherePC->SetVelocity(v_new);
+}

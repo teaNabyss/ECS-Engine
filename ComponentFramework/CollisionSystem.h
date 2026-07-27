@@ -43,6 +43,7 @@ public:
 	bool TwoSpheresDetection(Vec3 pos1, float r1, Vec3 pos2, float r2);
 	void TwoSpheresResponse(Vec3 pos1, Ref<PhysicsComponent> pc1, Vec3 pos2, Ref<PhysicsComponent> pc2);
 	bool SphereAABBDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b);
+	void SphereAABBResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> boxCC);
 	bool SpherePlaneDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b);
 	void SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> planeCC);
 	void Update(const float deltaTime);
