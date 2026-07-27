@@ -3,7 +3,7 @@
 #include "Plane.h"
 #include "Actor.h"
 #include "TransformComponent.h"
-
+class PhysicsComponent;
 using namespace MATH;
 
 enum class ColliderType {
@@ -47,5 +47,7 @@ class CollisionComponent : public Component {
 		// may be at their feet
 		Vec3 GetPosition(); 
 		float GetRadius() { return radius; }
+
+		Ref<PhysicsComponent> GetPhysicsComponent();
 };
 

@@ -95,9 +95,7 @@ void CollisionSystem::Update(float deltaTime) {
 }
 
 
-bool CollisionSystem::SpherePlaneDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b) {
-
-    // this is to avoid a specific order of references pass
+bool CollisionSystem::SpherePlaneDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b, Contact& outContact) {
     Ref<CollisionComponent> sphere;
     Ref<CollisionComponent> plane;
 
@@ -110,15 +108,29 @@ bool CollisionSystem::SpherePlaneDetection(const Ref<CollisionComponent>& a, con
         plane = a;
     }
     else {
-        return false; // not a sphere-plane pair
+        return false;
+    }
+    // actual math
+    float distance = VMath::dot(plane->plane.n, sphere->GetPosition()) + plane->plane.d;
+    const float epsilon = 0.001f;
+
+    if (fabs(distance) > sphere->GetRadius() + epsilon) {
+        return false;
     }
 
-    // here is the actual math 
-    float distance = VMath::dot(plane->plane.n, sphere->GetPosition()) + plane->plane.d;
-    const float epsilon = 0.001f; // small tolerance for floating-point imprecision
-    return fabs(distance) <= sphere->GetRadius() + epsilon;
-}
-void CollisionSystem::SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> planeCC) {
+    // Fill in the contact 
+    outContact.typeA = ColliderType::SPHERE;
+    outContact.typeB = ColliderType::PLANE;
+    outContact.ccA = sphere;
+    outContact.ccB = plane;
+
+    outContact.pcA = sphere->GetPhysicsComponent();
+    outContact.pcB = nullptr; // plane/ground has no PhysicsComponent
+
+    outContact.normal = plane->plane.n;
+
+    return true;
+}void CollisionSystem::SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> planeCC) {
     float e = 1.0f;
     Vec3 n = planeCC->plane.n;
     Vec3 v = spherePC->GetVelocity();
@@ -132,7 +144,7 @@ void CollisionSystem::SpherePlaneResponse(Ref<CollisionComponent> sphereCC, Ref<
     spherePC->SetVelocity(v_new);
 }
 
-bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b) {
+bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b, Contact& outContact) {
     Ref<CollisionComponent> sphere;
     Ref<CollisionComponent> box;
 
@@ -155,7 +167,6 @@ bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, cons
     Vec3 boxMin = boxCenter - boxHalf;
     Vec3 boxMax = boxCenter + boxHalf;
 
-    // Clamp sphere center to box bounds, per axis, to find the closest point on the box
     Vec3 closest;
     closest.x = std::max(boxMin.x, std::min(sphereCenter.x, boxMax.x));
     closest.y = std::max(boxMin.y, std::min(sphereCenter.y, boxMax.y));
@@ -164,38 +175,64 @@ bool CollisionSystem::SphereAABBDetection(const Ref<CollisionComponent>& a, cons
     Vec3 diff = sphereCenter - closest;
     float distSq = VMath::dot(diff, diff);
 
-    const float epsilon = 0.001f; // same reasoning as SpherePlaneDetection
+    const float epsilon = 0.001f;
     float r = sphere->GetRadius() + epsilon;
 
-    return distSq <= (r * r); //a bit more efficient 
+    if (distSq > (r * r)) {
+        return false;
+    }
+
+    float dist = VMath::mag(diff);
+    Vec3 n;
+    if (dist < VERY_SMALL) {
+        n = Vec3(0.0f, 1.0f, 0.0f);
+    }
+    else {
+        n = diff / dist;
+    }
+
+    FillContactComponents(outContact, ColliderType::SPHERE, ColliderType::AABB, sphere, box);
+    outContact.normal = n;
+
+    return true;
 }
 
-void CollisionSystem::SphereAABBResponse(Ref<CollisionComponent> sphereCC, Ref<PhysicsComponent> spherePC, Ref<CollisionComponent> boxCC) {
-    Vec3 sphereCenter = sphereCC->GetPosition();
-    Vec3 boxCenter = boxCC->aabb.center;
-    Vec3 boxHalf = boxCC->aabb.half;
+bool CollisionSystem::SpherePlaneDetection(const Ref<CollisionComponent>& a, const Ref<CollisionComponent>& b, Contact& outContact) {
+    Ref<CollisionComponent> sphere;
+    Ref<CollisionComponent> plane;
 
-    Vec3 boxMin = boxCenter - boxHalf;
-    Vec3 boxMax = boxCenter + boxHalf;
+    if (a->collidertype == ColliderType::SPHERE && b->collidertype == ColliderType::PLANE) {
+        sphere = a;
+        plane = b;
+    }
+    else if (b->collidertype == ColliderType::SPHERE && a->collidertype == ColliderType::PLANE) {
+        sphere = b;
+        plane = a;
+    }
+    else {
+        return false;
+    }
+    // actual math
+    float distance = VMath::dot(plane->plane.n, sphere->GetPosition()) + plane->plane.d;
+    const float epsilon = 0.001f;
 
-    Vec3 closest;
-    closest.x = std::max(boxMin.x, std::min(sphereCenter.x, boxMax.x));
-    closest.y = std::max(boxMin.y, std::min(sphereCenter.y, boxMax.y));
-    closest.z = std::max(boxMin.z, std::min(sphereCenter.z, boxMax.z));
+    if (fabs(distance) > sphere->GetRadius() + epsilon) {
+        return false;
+    }
 
-    Vec3 diff = sphereCenter - closest;
-    float dist = VMath::mag(diff);
+    // Fill in the contact 
+    FillContactComponents(outContact, ColliderType::SPHERE, ColliderType::PLANE, sphere, plane);
+    outContact.normal = plane->plane.n;
 
-    if (dist < VERY_SMALL) return; // sphere center is exactly on the surface/inside — no clear direction, bail for now
+    return true;
+}
 
-    Vec3 n = diff / dist; // normalized direction from box surface to sphere center
-
-    float e = 1.0f;
-    Vec3 v = spherePC->GetVelocity();
-    float vDotN = VMath::dot(v, n);
-
-    if (vDotN >= 0.0f) return; // already moving away
-
-    Vec3 v_new = v - (1.0f + e) * vDotN * n;
-    spherePC->SetVelocity(v_new);
+void CollisionSystem::FillContactComponents(Contact& outContact, ColliderType typeA, ColliderType typeB,
+    Ref<CollisionComponent> ccA, Ref<CollisionComponent> ccB) {
+    outContact.typeA = typeA;
+    outContact.typeB = typeB;
+    outContact.ccA = ccA;
+    outContact.ccB = ccB;
+    outContact.pcA = ccA->GetPhysicsComponent();
+    outContact.pcB = ccB->GetPhysicsComponent(); // naturally nullptr for ground/box, since they have no PhysicsComponent
 }

@@ -1,5 +1,5 @@
 #include "CollisionComponent.h"
-
+#include "PhysicsComponent.h"
 
 Vec3 CollisionComponent::GetPosition() {
     if (!tc) {
@@ -9,6 +9,10 @@ Vec3 CollisionComponent::GetPosition() {
     return tc ? tc->GetPosition() : Vec3();
 }
 
+Ref<PhysicsComponent> CollisionComponent::GetPhysicsComponent() {
+    Actor* actor = dynamic_cast<Actor*>(parent);
+    return actor ? actor->GetComponent<PhysicsComponent>() : nullptr;
+}
 
 CollisionComponent::CollisionComponent(Component* parent_, float radius_)
     : Component(parent_), collidertype(ColliderType::SPHERE), radius(radius_)
